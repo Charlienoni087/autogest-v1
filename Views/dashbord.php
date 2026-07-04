@@ -11,7 +11,7 @@
             AUTOGEST
         </a>
     </div>
-       
+
     </nav>
     <div class="container mt-4">
         <h1>BIENVENIDO AL SISTEMA DE INVENTARIO DE AUTOGEST</h1>
