@@ -30,7 +30,7 @@ $page = isset($_GET['page']) ? $_GET['page'] : 'dashboard';
             position: fixed;
             top: 0;
             left: 0;
-            background-color: #053c94; /* Azul vibrante de tu diseño */
+            background-color: #053c94; 
             padding-top: 30px;
             z-index: 1000;
             transition: all 0.3s ease;
@@ -39,7 +39,7 @@ $page = isset($_GET['page']) ? $_GET['page'] : 'dashboard';
         /* Botones del menú */
         .sidebar .btn-nav {
             background-color: transparent;
-            color: #92bbf9;
+            color: #e3e3e4;
             border: none;
             border-radius: 0;
             text-align: left;
@@ -87,7 +87,7 @@ $page = isset($_GET['page']) ? $_GET['page'] : 'dashboard';
             background: none;
             border: none;
             font-size: 28px;
-            color: #1d6be5; /* Mismo azul para combinar */
+            color: #1d6be5; 
             cursor: pointer;
             padding: 0;
             margin-bottom: 20px;
@@ -101,7 +101,7 @@ $page = isset($_GET['page']) ? $_GET['page'] : 'dashboard';
 </head>
 <body>
 
-    <!-- MENÚ LATERAL DE AUTOGEST -->
+     
     <div class="sidebar d-flex flex-column" id="sidebarMenu">
         <div class="px-4 mb-4 text-white">
             <h4 class="fw-bold fs-3">Autogest</h4>
@@ -134,25 +134,26 @@ $page = isset($_GET['page']) ? $_GET['page'] : 'dashboard';
     <!-- CONTENEDOR DEL CONTENIDO DINÁMICO -->
     <div class="content-frame" id="contentFrame">
         
-        <!-- Botón de barra esquinado (Hamburguesa) como el de image_3e37fb.png -->
+        <!-- Botón de barra esquinado (Hamburguesa)-->
         <button class="btn-hamburger" id="toggleMenuBtn" title="Mostrar/Ocultar Menú">
             <i class="bi bi-list"></i>
         </button>
 
         <div class="main-content">
         <?php
-        // Aquí ocurre la magia: dependiendo de qué botón presionen, se incluye un archivo diferente
+        // dependiendo de qué botón presionen, se incluye un archivo diferente
+
         switch ($page) {
             case 'dashboard':
                 include 'dashbord.php';
                 break;
 
             case 'vehiculos':
-                // Aquí incluyes el archivo de vehículos cuando lo tengas listo
                 echo "<h2>Módulo de Vehículos</h2>"; 
                 break;
 
             case 'licencia':
+                echo "<h2>Módulo de Licencias</h2>"; 
                 include 'modlicencia.php';
                 break;
 
@@ -161,7 +162,8 @@ $page = isset($_GET['page']) ? $_GET['page'] : 'dashboard';
                 break;
 
             case 'usuarios':
-                include 'modusuario.php'; // <--- Aquí llama a tu formulario e incluye el código con Bootstrap
+                echo "<h2>Módulo de Usuarios</h2>"; 
+                include 'modusuario.php'; //  
                 break;
 
             case 'reportes':
@@ -169,13 +171,12 @@ $page = isset($_GET['page']) ? $_GET['page'] : 'dashboard';
                 break;
 
             default:
-                include 'dashbord.php';
+                include 'dashboard.php';
                 break;
         }
         ?>
     </div>
 
-    <!-- Bootstrap 5 JS Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <!-- Script de JavaScript para el comportamiento Desplegable -->

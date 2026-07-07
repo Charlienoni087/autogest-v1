@@ -1,18 +1,15 @@
 <?php
-// ==========================================
 // CONFIGURACIÓN INICIAL E INCLUSIÓN DE CONEXIÓN
-// ==========================================
+
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-// Buscamos tu archivo en la carpeta 'config' subiendo un nivel desde 'views'
+// Busqueda de archivo en la carpeta views '
 if (!isset($conexion)) {
     include __DIR__ . '/../config/conexion.php';
 }
 
-// ==========================================
-// 1. LÓGICA PARA INSERTAR UN USUARIO
-// ==========================================
+// INSERTAR UN USUARIO
 if (isset($_POST['guardar_usuario'])) {
     $nombre = $_POST['nombre_usuario'];
     $correo = $_POST['correo'];
@@ -30,9 +27,7 @@ if (isset($_POST['guardar_usuario'])) {
     $stmt->close();
 }
 
-// ==========================================
-// 2. LÓGICA PARA ELIMINAR UN USUARIO
-// ==========================================
+// ELIMINAR UN USUARIO
 if (isset($_GET['eliminar'])) {
     $id_eliminar = intval($_GET['eliminar']);
     
@@ -47,9 +42,8 @@ if (isset($_GET['eliminar'])) {
     $stmt_delete->close();
 }
 
-// ==========================================
-// 3. LÓGICA PARA ACTUALIZAR UN USUARIO
-// ==========================================
+
+//  ACTUALIZAR UN USUARIO
 if (isset($_POST['actualizar_usuario'])) {
     $id_actualizar = intval($_POST['id_usuario']);
     $nombre = $_POST['nombre_usuario'];
@@ -73,9 +67,8 @@ if (isset($_POST['actualizar_usuario'])) {
     $stmt_update->close();
 }
 
-// ==========================================
+
 // 4. CONTROLADOR PARA CARGAR DATOS EN EDICIÓN
-// ==========================================
 $en_modo_edicion = false;
 $u_id = ""; $u_nombre = ""; $u_correo = ""; $u_rol = "";
 
@@ -98,13 +91,10 @@ if (isset($_GET['editar'])) {
     $stmt_edit->close();
 }
 
-// ==========================================
-// 5. CARGAR TABLA GENERAL (Usando tu variable $conexion)
-// ==========================================
+// 5. CARGAR TABLA GENERAL (donde se utilizo conexion)
 $resultado = $conexion->query("SELECT id_usuario, nombre_usuario, correo, rol FROM usuarios");
 ?>
 
-<!-- VISTA HTML (Sin etiquetas <html> ni <body> para que se acople limpio a tu main.php) -->
 <div class="container-fluid pt-3">
     <div class="row">
         
@@ -148,6 +138,7 @@ $resultado = $conexion->query("SELECT id_usuario, nombre_usuario, correo, rol FR
                     </form>
                 </div>
             </div>
+            
             <!-- Redirección adaptada al menú para las licencias -->
             <a href="main.php?page=licencia" class="btn btn-secondary mt-3 w-100">Ir a Módulo de Licencias →</a>
         </div>
