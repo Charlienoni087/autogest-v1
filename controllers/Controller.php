@@ -3,7 +3,7 @@ session_start();
 require_once '../config/conexion.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-   $user = trim($_POST['nombre_usuario']);
+    $user = trim($_POST['nombre_usuario']);
     $pass = trim($_POST['contrasena']);
 
     echo "Datos recibidos:<br>Usuario: $user<br>Contraseña: $pass<br><hr>";
@@ -12,7 +12,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt->bind_param("s", $user);
     $stmt->execute();
     $result = $stmt->get_result();
-     if ($result && $row = $result->fetch_assoc()) {
+    if ($result && $row = $result->fetch_assoc()) {
         if (password_verify($pass, $row['contrasena'])) {
             $_SESSION['id_usuario'] = $row['id_usuario'];
 
@@ -33,7 +33,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     } else {
         echo "Usuario o contraseña incorrectos.";
-         }
+        }
 
 
 /*    if ($row = $result->fetch_assoc()) {
