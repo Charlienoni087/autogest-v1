@@ -10,9 +10,11 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
     <!-- Google Fonts - Public Sans para un acabado idéntico -->
     <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/index.css">
+</head>
 
-    <style>
-        body {
+<style>
+    body {
             font-family: 'Public Sans', sans-serif;
             background-color: #f4f6f9;
             height: 100vh;
@@ -283,8 +285,7 @@
                 width: 100%;
             }
         }
-    </style>
-</head>
+</style>
 <body>
 
     <div class="login-container">
@@ -316,23 +317,23 @@
                 </div>
 
                 <!-- Para una ventana que te dice que si quieres volver al  Formulario -->
-                <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="POST" autocomplete="off">
+<form action="Controllers/Controller.php" method="POST" autocomplete="off">
                     
                     <!-- Campo Usuario -->
                     <div class="text-start mb-3">
                         <label for="username" class="form-label">Usuario</label>
                         <div class="input-group-custom">
                             <i class="fa-regular fa-user input-icon"></i>
-                            <input type="text" id="username" name="username" class="form-control-custom" placeholder="Ingresa tu usuario" required>
+                            <input type="text" id="username" name="nombre_usuario" class="form-control-custom" placeholder="Ingresa tu usuario" required>
                         </div>
                     </div>
-
+                    
                     <!-- Campo Contraseña -->
                     <div class="text-start mb-3">
                         <label for="password" class="form-label">Contraseña</label>
                         <div class="input-group-custom">
                             <i class="fa-solid fa-lock input-icon"></i>
-                            <input type="password" id="password" name="password" class="form-control-custom" placeholder="Ingresa tu contraseña" required>
+                            <input type="password" id="password" name="contrasena" class="form-control-custom" placeholder="Ingresa tu contraseña" required>
                             <i class="fa-regular fa-eye toggle-password" onclick="togglePasswordVisibility()"></i>
                         </div>
                     </div>

@@ -10,7 +10,7 @@ $page = isset($_GET['page']) ? $_GET['page'] : 'dashboard';
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Autogest - Panel de Control</title>
+    <title>Autogest - Inicio</title>
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Iconos de Bootstrap -->
@@ -116,9 +116,6 @@ $page = isset($_GET['page']) ? $_GET['page'] : 'dashboard';
             <a href="main.php?page=vehiculos" class="btn-nav <?php echo $page == 'vehiculos' ? 'active' : ''; ?>">
                 <i class="bi bi-car-front-fill me-3 fs-5"></i> <span>Vehículos</span>
             </a>
-            <a href="main.php?page=licencia" class="btn-nav <?php echo $page == 'licencia' ? 'active' : ''; ?>">
-                <i class="bi bi-card-text me-3 fs-5"></i> <span>Licencia</span>
-            </a>
             <a href="main.php?page=conductores" class="btn-nav <?php echo $page == 'conductores' ? 'active' : ''; ?>">
                 <i class="bi bi-people-fill me-3 fs-5"></i> <span>Conductores</span>
             </a>
@@ -127,6 +124,9 @@ $page = isset($_GET['page']) ? $_GET['page'] : 'dashboard';
             </a>
             <a href="main.php?page=reportes" class="btn-nav <?php echo $page == 'reportes' ? 'active' : ''; ?>">
                 <i class="bi bi-bar-chart-line-fill me-3 fs-5"></i> <span>Reportes</span>
+            </a>
+            <a href="main.php?page=licencia" class="btn-nav <?php echo $page == 'licencia' ? 'active' : ''; ?>">
+                <i class="bi bi-card-text me-3 fs-5"></i> <span>Mantenimiento</span>
             </a>
         </div>
     </div>
@@ -153,7 +153,7 @@ $page = isset($_GET['page']) ? $_GET['page'] : 'dashboard';
                 break;
 
             case 'licencia':
-                echo "<h2>Módulo de Licencias</h2>"; 
+                echo "<h2>Módulo de Mantenimiento</h2>"; 
                 include 'modlicencia.php';
                 break;
 

@@ -1,10 +1,8 @@
 <?php
-// CONFIGURACIÓN INICIAL E INCLUSIÓN DE CONEXIÓN
 
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-// Busqueda de archivo en la carpeta views '
 if (!isset($conexion)) {
     include __DIR__ . '/../config/conexion.php';
 }
