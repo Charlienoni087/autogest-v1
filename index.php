@@ -1,3 +1,8 @@
+<?php
+session_start();
+$errorMensaje = $_SESSION['login_error'] ?? '';
+unset($_SESSION['login_error']);
+?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -200,7 +205,7 @@
         }
 
         .forgot-password-link {
-            color: #1d4ed8;
+            color: #0c3b2e;
             text-decoration: none;
             font-size: 0.85rem;
             font-weight: 500;
@@ -212,7 +217,7 @@
 
         /* Botón de inicio sesión */
         .btn-login-primary {
-            background-color: #0a2240;
+            background-color: #6d9773;
             color: #ffffff;
             border: none;
             border-radius: 8px;
@@ -308,6 +313,7 @@
         <div class="form-section">
             
             <div class="login-card text-center">
+                
                 <h2 class="card-title">Bienvenido</h2>
                 <p class="card-subtitle">Inicia sesión para continuar</p>
                 
@@ -317,7 +323,7 @@
                 </div>
 
                 <!-- Para una ventana que te dice que si quieres volver al  Formulario -->
-<form action="Controllers/Controller.php" method="POST" autocomplete="off">
+                <form action="Controllers/LoginController.php" method="POST" autocomplete="off">
                     
                     <!-- Campo Usuario -->
                     <div class="text-start mb-3">
@@ -354,9 +360,20 @@
                         <i class="fa-solid fa-arrow-right-to-bracket me-2"></i> Iniciar Sesión
                     </button>
 
+                    <br>
+
+                    <?php if (!empty($errorMensaje)): ?>
+                        <br>
+                    <div id="alertaError" class="alert alert-danger d-flex align-items-center mb-4" role="alert">
+                        <i class="fa-solid fa-circle-exclamation me-2"></i>
+                        <div><?= htmlspecialchars($errorMensaje, ENT_QUOTES, 'UTF-8') ?></div>
+                    </div>
+                    <?php endif; ?>
+
+
                     <!-- Divisor O -->
                     <div class="divider-or">
-                        <span>o</span>
+                        <span>AutoGest - Gestion Vehicular</span>
                     </div>
 
 
@@ -383,5 +400,21 @@
             }
         }
     </script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const alerta = document.getElementById("alertaError");
+
+            if (alerta) {
+                setTimeout(() => {
+                    alerta.classList.add("fade");
+
+                    setTimeout(() => {
+                        alerta.remove();
+                    }, 150);
+                }, 3000);
+            }
+        });
+</script>
 </body>
 </html>
