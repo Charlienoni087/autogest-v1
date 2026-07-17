@@ -164,6 +164,7 @@ $page = isset($_GET['page']) ? $_GET['page'] : 'dashboard';
 
             case 'reportes':
                 echo "<h2>Módulo de Reportes</h2>";
+                include 'modreportes.php';
                 break;
 
             default:
