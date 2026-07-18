@@ -99,7 +99,7 @@ $resultado = $conexion->query("SELECT id_usuario, nombre_usuario, correo, rol FR
         <!-- COLUMNA DEL FORMULARIO -->
         <div class="col-md-4 mb-4">
             <div class="card shadow-sm border-0">
-                <div class="card-header <?= $en_modo_edicion ? 'bg-warning text-dark' : 'bg-primary text-white' ?> fw-bold">
+                <div class="card-header <?= $en_modo_edicion ? 'bg-warning text-dark' : 'bg-primary text-white' ?> fw-bold" style="background-color: #0c3b2e;">
                     <?= $en_modo_edicion ? 'Modificar Usuario ID: '.htmlspecialchars($u_id) : 'Registrar Nuevo Usuario' ?>
                 </div>
                 <div class="card-body">
@@ -111,7 +111,7 @@ $resultado = $conexion->query("SELECT id_usuario, nombre_usuario, correo, rol FR
                             <input type="text" name="nombre_usuario" class="form-control" required value="<?= htmlspecialchars($u_nombre) ?>" placeholder="ej. Carlos Gómez Ruiz">
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">Correo Institucional</label>
+                            <label class="form-label">Correo Electronico</label>
                             <input type="email" name="correo" class="form-control" required value="<?= htmlspecialchars($u_correo) ?>" placeholder="ej. cgomez@alcaldia.gob">
                         </div>
                         <div class="mb-3">
@@ -131,7 +131,7 @@ $resultado = $conexion->query("SELECT id_usuario, nombre_usuario, correo, rol FR
                             <button type="submit" name="actualizar_usuario" class="btn btn-warning w-100 fw-bold mb-2">Actualizar Datos</button>
                             <a href="main.php?page=usuarios" class="btn btn-outline-secondary w-100">Cancelar Edición</a>
                         <?php else: ?>
-                            <button type="submit" name="guardar_usuario" class="btn btn-primary w-100">Guardar Usuario</button>
+                            <button type="submit" name="guardar_usuario" class="btn btn-primary w-100" style="background-color: #6d9773;">Guardar Usuario</button>
                         <?php endif; ?>
                     </form>
                 </div>
@@ -144,12 +144,12 @@ $resultado = $conexion->query("SELECT id_usuario, nombre_usuario, correo, rol FR
         <!-- COLUMNA DE LA TABLA -->
         <div class="col-md-8">
             <div class="card shadow-sm border-0">
-                <div class="card-header bg-dark text-white fw-bold">Registro de Personal Autorizado</div>
+                <div class="card-header bg text-white fw-bold" style="background-color: #0c3b2e;">Registro de Personal Autorizado</div>
                 <div class="card-body table-responsive">
                     <table class="table table-hover align-middle">
                         <thead class="table-light">
                             <tr>
-                                <th>ID</th>
+                                <!--<th>ID</th>-->
                                 <th>Nombre Completo</th>
                                 <th>Correo</th>
                                 <th>Rol</th>
@@ -160,7 +160,7 @@ $resultado = $conexion->query("SELECT id_usuario, nombre_usuario, correo, rol FR
                             <?php if ($resultado && $resultado->num_rows > 0): ?>
                                 <?php while($row = $resultado->fetch_assoc()): ?>
                                 <tr>
-                                    <td><?= $row['id_usuario'] ?></td>
+                                    <!--<td><?= $row['id_usuario'] ?></td>-->
                                     <td><?= htmlspecialchars($row['nombre_usuario']) ?></td>
                                     <td><?= htmlspecialchars($row['correo']) ?></td>
                                     <td>
