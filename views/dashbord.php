@@ -1,3 +1,4 @@
+
 <?php
 // Datos de prueba 
 $totalVehiculos = 5;

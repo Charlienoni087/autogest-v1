@@ -93,7 +93,7 @@ $page = isset($_GET['page']) ? $_GET['page'] : 'dashboard';
         </div>
 
         <div class="nav flex-column w-100">
-
+           
             <a href="main.php?page=dashboard" class="btn-nav <?php echo $page == 'dashboard' ? 'active' : ''; ?>">
                 <i class="bi bi-grid-1x2-fill me-3 fs-5"></i> <span>Dashboard</span>
             </a>
