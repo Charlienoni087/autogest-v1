@@ -18,6 +18,18 @@ class Licencia {
         return $resultado->fetch_all(MYSQLI_ASSOC);
     }
 
+    public function obtenerPorId(int $id) {
+        $sql = "SELECT * FROM Licencia WHERE id_licencia = ?";
+        $stmt = $this->db->prepare($sql);
+        if (!$stmt) {
+            die("Error prepare: " . $this->db->error);
+        }
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
+        $resultado = $stmt->get_result();
+        return $resultado->fetch_assoc();
+    }
+
     public function crear(string $numero_licencia, string $tipo_licencia, string $categorias, string $fecha_vencimiento) {
         $sql = "INSERT INTO Licencia (numero_licencia, tipo_licencia, categorias, fecha_vencimiento) VALUES (?, ?, ?, ?)";
         $stmt = $this->db->prepare($sql);
@@ -31,6 +43,13 @@ class Licencia {
                 WHERE id_licencia = ?";
         $stmt = $this->db->prepare($sql);
         $stmt->bind_param("ssssi", $numero_licencia, $tipo_licencia, $categorias, $fecha_vencimiento, $id_licencia);
+        return $stmt->execute();
+    }
+
+    public function eliminar(int $id_licencia) {
+        $sql = "DELETE FROM Licencia WHERE id_licencia = ?";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bind_param("i", $id_licencia);
         return $stmt->execute();
     }
 }

@@ -1,9 +1,25 @@
 <?php
+ob_start();
+session_start();
+
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
+if (!isset($_SESSION['id_usuario'])) {
+    header("Location: /AutoGest/index.php");
+    exit;
+}
+
+$mostrarBienvenida = isset($_SESSION['login_exitoso']) && $_SESSION['login_exitoso'] === true;
+$nombreUsuario = $_SESSION['nombre_usuario'] ?? '';
+
+unset($_SESSION['login_exitoso']);
+
 // Si no viene ninguna página en la URL, por defecto cargará 'dashboard'
 $page = isset($_GET['page']) ? $_GET['page'] : 'dashboard';
+
+
+
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -15,101 +31,69 @@ $page = isset($_GET['page']) ? $_GET['page'] : 'dashboard';
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Iconos de Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
-    
-    <style>
-        body {
-            background-color: #ffffff;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            overflow-x: hidden;
-        }
-        
-        /* Contenedor del Menú Lateral */
-        .sidebar {
-            width: 260px;
-            height: 100vh;
-            position: fixed;
-            top: 0;
-            left: 0;
-            background-color: #053c94; 
-            padding-top: 30px;
-            z-index: 1000;
-            transition: all 0.3s ease;
-        }
-
-        /* Botones del menú */
-        .sidebar .btn-nav {
-            background-color: transparent;
-            color: #e3e3e4;
-            border: none;
-            border-radius: 0;
-            text-align: left;
-            padding: 15px 25px;
-            font-size: 16px;
-            font-weight: 600;
-            width: 100%;
-            display: flex;
-            align-items: center;
-            transition: background 0.2s, color 0.2s;
-            text-decoration: none;
-        }
-
-        /* Módulo activo con línea blanca lateral */
-        .sidebar .btn-nav.active {
-            background-color: rgba(255, 255, 255, 0.12); 
-            color: #ffffff;
-            border-left: 5px solid #ffffff;
-            padding-left: 20px; 
-        }
-
-        .sidebar .btn-nav:hover {
-            background-color: rgba(255, 255, 255, 0.08);
-            color: #ffffff;
-        }
-
-        /* Contenedor del Contenido Principal */
-        .content-frame {
-            margin-left: 260px;
-            padding: 20px 30px;
-            min-height: 100vh;
-            transition: all 0.3s ease;
-        }
-
-        /* Clases para ocultar/desplegar el menú lateral */
-        .sidebar.hidden {
-            left: -260px;
-        }
-        .content-frame.expanded {
-            margin-left: 0;
-        }
-
-        /* Botón de barra esquinado (Menú Hamburguesa) */
-        .btn-hamburger {
-            background: none;
-            border: none;
-            font-size: 28px;
-            color: #1d6be5; 
-            cursor: pointer;
-            padding: 0;
-            margin-bottom: 20px;
-            display: inline-flex;
-            align-items: center;
-        }
-        .btn-hamburger:focus {
-            outline: none;
-        }
-    </style>
+    <!--Con este link se pone el iconito de la camioneta xD-->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/main.css">
 </head>
+
 <body>
 
-     
+     <!-- Modal de bienvenida -->
+    <div class="modal fade" id="modalBienvenida" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content modal-bienvenida">
+
+            <div class="modal-body text-center">
+
+                <img src="../assets/autogest-logo.png"
+                     class="logo-bienvenida mb-3"
+                     alt="Logo AutoGest">
+
+                <h3 class="fw-bold">¡Bienvenido!</h3>
+
+                <h5 class="nombre-usuario">
+                    <?= htmlspecialchars($nombreUsuario) ?>
+                </h5>
+
+                <p class="text-muted">
+                    Has iniciado sesión correctamente en
+                    <strong>AutoGest</strong>.
+                </p>
+
+            </div>
+
+            <div class="modal-footer border-0 justify-content-center pb-4">
+                <button
+                    type="button"
+                    class="btn btn-bienvenida px-5"
+                    data-bs-dismiss="modal">
+                    Continuar
+                </button>
+            </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!--Codigo para la animacion de la bienvenida-->
+    <?php if ($mostrarBienvenida): ?>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const modal = new bootstrap.Modal(document.getElementById('modalBienvenida'));
+            modal.show();
+        });
+    </script>
+    <?php endif; ?>
+
+    <!--Codigo para el menu-->
     <div class="sidebar d-flex flex-column" id="sidebarMenu">
         <div class="px-4 mb-4 text-white">
-            <h4 class="fw-bold fs-3">Autogest</h4>
-            <hr class="text-white-50">
+            <img src="../assets/autogest-logo.png" alt="Logo de AutoGest" class="logo">
         </div>
 
         <div class="nav flex-column w-100">
-
+           
             <a href="main.php?page=dashboard" class="btn-nav <?php echo $page == 'dashboard' ? 'active' : ''; ?>">
                 <i class="bi bi-grid-1x2-fill me-3 fs-5"></i> <span>Dashboard</span>
             </a>
@@ -138,8 +122,18 @@ $page = isset($_GET['page']) ? $_GET['page'] : 'dashboard';
         <button class="btn-hamburger" id="toggleMenuBtn" title="Mostrar/Ocultar Menú">
             <i class="bi bi-list"></i>
         </button>
+        
+        <div id="loaderModulo" class="loader-modulo">
+            <div class="loader-escena">
+                <i class="fa-solid fa-truck loader-icon"></i>
+                <div class="loader-carretera">
+                    <div class="loader-linea"></div>
+                </div>
+            </div>
+            <p class="mt-3 text-secondary fw-semibold">Cargando módulo...</p>
+        </div>
 
-        <div class="main-content">
+        <div class="main-content" id="contenidoModulo">
         <?php
         // dependiendo de qué botón presionen, se incluye un archivo diferente
 
@@ -150,15 +144,17 @@ $page = isset($_GET['page']) ? $_GET['page'] : 'dashboard';
 
             case 'vehiculos':
                 echo "<h2>Módulo de Vehículos</h2>"; 
+                include 'modVehiculo.php';
                 break;
 
             case 'licencia':
                 echo "<h2>Módulo de Mantenimiento</h2>"; 
-                include 'modlicencia.php';
+                include 'modMantenimiento.php';
                 break;
 
             case 'conductores':
                 echo "<h2>Módulo de Conductores</h2>";
+                require_once __DIR__ . '/../Controllers/ConductorController.php';
                 break;
 
             case 'usuarios':
@@ -168,6 +164,7 @@ $page = isset($_GET['page']) ? $_GET['page'] : 'dashboard';
 
             case 'reportes':
                 echo "<h2>Módulo de Reportes</h2>";
+                include 'modreportes.php';
                 break;
 
             default:
@@ -178,18 +175,6 @@ $page = isset($_GET['page']) ? $_GET['page'] : 'dashboard';
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
-    <!-- Script de JavaScript para el comportamiento Desplegable -->
-    <script>
-        const sidebarMenu = document.getElementById('sidebarMenu');
-        const contentFrame = document.getElementById('contentFrame');
-        const toggleMenuBtn = document.getElementById('toggleMenuBtn');
-
-        toggleMenuBtn.addEventListener('click', () => {
-            // Intercambia las clases para ocultar o mostrar con animación suave
-            sidebarMenu.classList.toggle('hidden');
-            contentFrame.classList.toggle('expanded');
-        });
-    </script>
+    <script src="../scripts/main.js"></script>
 </body>
 </html>

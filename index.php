@@ -1,3 +1,8 @@
+<?php
+session_start();
+$errorMensaje = $_SESSION['login_error'] ?? '';
+unset($_SESSION['login_error']);
+?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -16,7 +21,7 @@
 <style>
     body {
             font-family: 'Public Sans', sans-serif;
-            background-color: #f4f6f9;
+            background-color: #f4f6f9 ;
             height: 100vh;
             margin: 0;
             overflow-x: hidden;
@@ -30,16 +35,17 @@
 
         /*SECCIÓN IZQUIERDA*/
         .brand-section {
-            width: 44%;
+            width: 57%;
             position: relative;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            color: #ffffff;
-            padding: 40px;
+            color: #000f03;
+            padding: 20px;
             text-align: center;
 
+          
             /* Imagen de la camioneta para el fondo */
             background: url('Camioneta.jpg') no-repeat center center;
             background-size: cover;
@@ -56,7 +62,7 @@
             bottom: 0;
 
             /* Color Azul oscuro que muestra transparencia en el lado izquierdo*/
-            background: linear-gradient(rgba(10, 34, 64, 0.93), rgba(10, 34, 64, 0.93));
+           background: linear-gradient(#024935cc, rgba(7, 42, 85, 0.8));
             z-index: 1;
         }
 
@@ -72,6 +78,21 @@
             width: 100%;
         }
 
+        /* Estilos añadidos para centrar y controlar la imagen del logo superior */
+        .brand-logo-container {
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .brand-logo {
+            max-width: 520px; /* Tamaño controlado para que se adapte al diseño */
+            height: auto;
+            object-fit: contain;
+            filter: drop-shadow(0px 4px 8px rgba(0, 0, 0, 0.2)); /* Le da un realce suave */
+        }
+
 
         .brand-title {
             font-size: 2.5rem;
@@ -85,14 +106,14 @@
             font-size: 1.1rem;
             font-weight: 500;
             letter-spacing: 1px;
-            color: #d1dbe5;
+            color: #000000db;
             margin-bottom: 40px;
             text-transform: uppercase;
         }
 
         .brand-footer {
             margin-top: 20px;
-            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            border-top: 1px solid #000000db;
             padding-top: 15px;
             width: 65%;
         }
@@ -111,6 +132,7 @@
         }
 
         /*SECCIÓN DERECHA: FORMULARIO DE LOGIN*/
+
         .form-section {
             width: 56%;
             display: flex;
@@ -122,14 +144,35 @@
         }
 
         /* Tarjeta de Login (cuadro blanco) */
-        .login-card {
-            background: #ffffff;
-            border-radius: 16px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
-            width: 100%;
-            max-width: 480px;
-            padding: 45px 40px;
-        }
+        .brand-fondo-container {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1; 
+        opacity: 0.9;
+    }
+
+        /* Tarjeta de Login (cuadro blanco) */
+    .login-card {
+        background: #ffffff;
+        border-radius: 16px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15); /* Aumentada para resaltar sobre el fondo nuevo */
+        width: 100%;
+        max-width: 480px;
+        padding: 45px 40px;
+        position: relative;
+       
+    }
+    
+        .brand-fondo {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+        opacity:0.9;
+    }
 
         .card-title {
             color: #1e293b;
@@ -200,7 +243,7 @@
         }
 
         .forgot-password-link {
-            color: #1d4ed8;
+            color: #0c3b2e;
             text-decoration: none;
             font-size: 0.85rem;
             font-weight: 500;
@@ -212,7 +255,7 @@
 
         /* Botón de inicio sesión */
         .btn-login-primary {
-            background-color: #0a2240;
+            background-color: #6d9773;
             color: #ffffff;
             border: none;
             border-radius: 8px;
@@ -293,21 +336,30 @@
         <!-- SECCIÓN IZQUIERDA: Identidad Visual en la parte azul , donde se mmuestra la imagen de la camioneta-->
         <div class="brand-section">
             <div class="brand-content">
+
+                <!-- Contenedor del logotipo real de AutoGest -->
+        <div class="brand-logo-container">
+            <img src="Assets/autogest-logo.png" class="brand-logo">
+        </div>
             
-                <div class="brand-title">AUTOGEST</div>
-                <div class="brand-subtitle">Sistema de Inventario de Vehículos</div>
+                <div class="brand-title"></div>
+                <div class="brand-subtitle"></div>
                 
-                <div class="brand-footer">
-                    <i class="fa-solid fa-building-columns"></i>
-                    <p>Alcaldía Municipal</p>
+                <div class="">
+                   
+                    <p></p>
                 </div>
             </div>
         </div>
 
         <!-- SECCIÓN DERECHA: Formulario -->
         <div class="form-section">
+          
+
+            <div class="login-card text-center">
             
             <div class="login-card text-center">
+                
                 <h2 class="card-title">Bienvenido</h2>
                 <p class="card-subtitle">Inicia sesión para continuar</p>
                 
@@ -317,7 +369,7 @@
                 </div>
 
                 <!-- Para una ventana que te dice que si quieres volver al  Formulario -->
-<form action="Controllers/Controller.php" method="POST" autocomplete="off">
+                <form action="Controllers/LoginController.php" method="POST" autocomplete="off">
                     
                     <!-- Campo Usuario -->
                     <div class="text-start mb-3">
@@ -354,9 +406,20 @@
                         <i class="fa-solid fa-arrow-right-to-bracket me-2"></i> Iniciar Sesión
                     </button>
 
+                    <br>
+
+                    <?php if (!empty($errorMensaje)): ?>
+                        <br>
+                    <div id="alertaError" class="alert alert-danger d-flex align-items-center mb-4" role="alert">
+                        <i class="fa-solid fa-circle-exclamation me-2"></i>
+                        <div><?= htmlspecialchars($errorMensaje, ENT_QUOTES, 'UTF-8') ?></div>
+                    </div>
+                    <?php endif; ?>
+
+
                     <!-- Divisor O -->
                     <div class="divider-or">
-                        <span>o</span>
+                        <span>AutoGest - Gestion Vehicular</span>
                     </div>
 
 
@@ -383,5 +446,21 @@
             }
         }
     </script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const alerta = document.getElementById("alertaError");
+
+            if (alerta) {
+                setTimeout(() => {
+                    alerta.classList.add("fade");
+
+                    setTimeout(() => {
+                        alerta.remove();
+                    }, 150);
+                }, 3000);
+            }
+        });
+</script>
 </body>
 </html>
