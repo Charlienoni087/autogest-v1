@@ -144,7 +144,7 @@ $page = isset($_GET['page']) ? $_GET['page'] : 'dashboard';
 
             case 'vehiculos':
                 echo "<h2>Módulo de Vehículos</h2>"; 
-                include 'modVehiculo.php';
+                require_once __DIR__ . '/../Controllers/VehiculoController.php';
                 break;
 
             case 'licencia':

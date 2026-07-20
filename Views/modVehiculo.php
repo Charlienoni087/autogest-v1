@@ -40,15 +40,50 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <td>Toyota</td>
-                            <td>Hilux</td>
-                            <td>Blanco</td>
-                            <td>23A124ED091</td>
-                            <td>Camioneta</td>
-                            <td>Gasolina</td>
-                            <td>Activo</td>
-                            <td>12345678</td>
-                            <td>No tiene</td>
+                            <?php if (isset($listaVehiculos) && count($listaVehiculos) > 0): ?>
+                                <?php foreach ($listaVehiculos as $vehiculo): ?>
+                                    <tr>
+                                        <td><?= htmlspecialchars($vehiculo['marca']) ?></td>
+                                        <td><?= htmlspecialchars($vehiculo['modelo']) ?></td>
+                                        <td><?= htmlspecialchars($vehiculo['color']) ?></td>
+                                        <td><?= htmlspecialchars($vehiculo['chasis']) ?></td>
+                                        <td><?= htmlspecialchars($vehiculo['tipo_vehiculo']) ?></td>
+                                        <td><?= htmlspecialchars($vehiculo['tipo_combustible']) ?></td>
+                                        <td>
+                                            <?php if ($vehiculo['estado'] == 1): ?>
+                                                <span class="badge bg-success">Activo</span>
+                                            <?php else: ?>
+                                                <span class="badge bg-danger">Inactivo</span>
+                                            <?php endif; ?>
+                                        </td>
+                                        <td><?= htmlspecialchars($vehiculo['numero_poliza']) ?></td>
+                                        <td><?= htmlspecialchars($vehiculo['gravamen']) ?></td>
+
+                                        <td class="text-center">
+                                        <div class="btn-group btn-group-sm">
+                                            <a href="main.php?page=vehiculos&editar_vehiculo=<?= $vehiculo['id_vehiculo'] ?>"
+                                            class="btn btn-outline-dark" 
+                                            title="Editar">
+                                                <i class="bi bi-pencil-square"></i> Editar
+                                            </a>
+
+                                            <a href="main.php?page=vehiculos&eliminar_vehiculo=<?= $vehiculo['id_vehiculo'] ?>" 
+                                            class="btn btn-outline-danger" 
+                                            data-bs-target="#modalAgregarVehiculo" 
+                                            onclick="return confirm('¿Estás seguro de que deseas eliminar este vehiculo?');" 
+                                            title="Eliminar">
+                                                <i class="bi bi-trash3"></i> Borrar
+                                            </a>
+                                        </div>
+                                    </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            <?php else: ?>
+                                <tr>
+                                    <td colspan="9" class="text-center text-muted">No hay vehiculos registrados o no se pudieron cargar los datos.</td>
+                                </tr>
+                            <?php endif; ?>
+                            
                         </tbody>
                     </table>
                 </div>
@@ -87,10 +122,7 @@
                             <input type="text" name="chasis" class="form-control" required placeholder="ej. 1234567890">
                         </div>
 
-                        <div class="mb-1">
-                            <label class="form-label">Placa</label>
-                            <input type="text" name="placa" class="form-control" required placeholder="ej. 23A124ED091">
-                        </div>
+                        
 
                         <div class="mb-1">
                             <label class="form-label">Tipo de Vehículo</label>
@@ -110,11 +142,23 @@
                             </select>
                         </div>
 
+                        <div class="mb-1">
+                            <label class="form-label">N° Póliza</label>
+                            <input type="text" name="numero_poliza" class="form-control" required placeholder="ej. 1234567890">
+                        </div>  
+
+                        <div class="mb-1">
+                            <label class="form-label">Gravamen</label>
+                            <input type="number" name="gravamen" class="form-control" required placeholder="ej. 1000">
+                        </div>
+
+
+
                         <!--<div class="mb-1">
                             <label class="form-label">Licencia</label>
                             <select name="id_licencia" class="form-select" required>
                                 <?php foreach ($listaVehiculos as $vehiculos): ?>
-                                    <option value="<?= $vehiculos['id_licencia'] ?>">
+                                    <option value="<?= $vehiculos['id_vehiculo'] ?>">
                                         <?= htmlspecialchars($vehiculos['numero_licencia']) ?>
                                     </option>
                                 <?php endforeach; ?>
@@ -128,7 +172,7 @@
 
                         <div class="d-flex justify-content-end gap-2">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                            <button type="submit" name="agregar_conductor" class="btn btn-primary">Guardar</button>
+                            <button type="submit" name="agregar_vehiculo" class="btn btn-primary">Guardar</button>
                         </div>
                     </form>
                 </div>
