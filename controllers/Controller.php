@@ -1,11 +1,12 @@
 <?php
 session_start();
-ob_start();
 require_once '../config/conexion.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $user = trim($_POST['nombre_usuario']);
     $pass = trim($_POST['contrasena']);
+
+    echo "Datos recibidos:<br>Usuario: $user<br>Contraseña: $pass<br><hr>";
 
     $stmt = $conexion->prepare("SELECT id_usuario, contrasena FROM usuarios WHERE nombre_usuario = ?");
     $stmt->bind_param("s", $user);
@@ -15,20 +16,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if (password_verify($pass, $row['contrasena'])) {
             $_SESSION['id_usuario'] = $row['id_usuario'];
 
-            $ruta_dashboard = realpath(__DIR__ . '/../Views/main.php');
+            // Obtenemos la ruta absoluta al archivo dashboard.php
+            // __DIR__ es la carpeta donde está este archivo (controllers/)
+            // La ruta resultante sería: C:/xampp/htdocs/farmacia/views/dashbord.php
+            $ruta_dashboard = realpath(__DIR__ . '/../Views/dashbord.php');
 
             if ($ruta_dashboard && file_exists($ruta_dashboard)) {
-                header("Location: /AutoGest/Views/main.php");
+                // Redireccionamos a la URL pública, no a la ruta del disco duro
+                header("Location: /AUTOGEST/Views/dashbord.php");
                 exit();
             } else {
-                die("Error crítico: No se encuentra el archivo. Ruta buscada: " . __DIR__ . '/../Views/main.php');
+                die("Error crítico: No se encuentra el archivo. Ruta buscada: " . __DIR__ . '/../Views/dashbord.php');
             }
         } else {
-            echo "<script>alert('Usuario o contraseña incorrectos.');</script>";
+            echo "Usuario o contraseña incorrectos.";
         }
     } else {
-        echo "<script>alert('Usuario o contraseña incorrectos.');</script>";
-    }
+        echo "Usuario o contraseña incorrectos.";
+        }
 
 
 /*    if ($row = $result->fetch_assoc()) {
