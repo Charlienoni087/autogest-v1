@@ -1,195 +1,129 @@
 <?php
-
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-
-if (!isset($conexion)) {
-    include __DIR__ . '/../config/conexion.php';
-}
-
-// INSERTAR UN USUARIO
-if (isset($_POST['guardar_usuario'])) {
-    $nombre = $_POST['nombre_usuario'];
-    $correo = $_POST['correo'];
-    $contrasena = password_hash($_POST['contrasena'], PASSWORD_BCRYPT);
-    $rol = $_POST['rol'];
-
-    $stmt = $conexion->prepare("INSERT INTO usuarios (nombre_usuario, correo, contrasena, rol) VALUES (?, ?, ?, ?)");
-    $stmt->bind_param("ssss", $nombre, $correo, $contrasena, $rol);
-    
-    if ($stmt->execute()) {
-        echo "<div class='alert alert-success m-2'>¡Usuario guardado con éxito!</div>";
-    } else {
-        echo "<div class='alert alert-danger m-2'>Error al guardar: " . $conexion->error . "</div>";
-    }
-    $stmt->close();
-}
-
-// ELIMINAR UN USUARIO
-if (isset($_GET['eliminar'])) {
-    $id_eliminar = intval($_GET['eliminar']);
-    
-    $stmt_delete = $conexion->prepare("DELETE FROM usuarios WHERE id_usuario = ?");
-    $stmt_delete->bind_param("i", $id_eliminar);
-    
-    if ($stmt_delete->execute()) {
-        echo "<div class='alert alert-warning m-2'>¡Usuario eliminado correctamente!</div>";
-    } else {
-        echo "<div class='alert alert-danger m-2'>Error al eliminar: " . $conexion->error . "</div>";
-    }
-    $stmt_delete->close();
-}
-
-
-//  ACTUALIZAR UN USUARIO
-if (isset($_POST['actualizar_usuario'])) {
-    $id_actualizar = intval($_POST['id_usuario']);
-    $nombre = $_POST['nombre_usuario'];
-    $correo = $_POST['correo'];
-    $rol = $_POST['rol'];
-    
-    if (!empty($_POST['contrasena'])) {
-        $contrasena = password_hash($_POST['contrasena'], PASSWORD_BCRYPT);
-        $stmt_update = $conexion->prepare("UPDATE usuarios SET nombre_usuario=?, correo=?, contrasena=?, rol=? WHERE id_usuario=?");
-        $stmt_update->bind_param("ssssi", $nombre, $correo, $contrasena, $rol, $id_actualizar);
-    } else {
-        $stmt_update = $conexion->prepare("UPDATE usuarios SET nombre_usuario=?, correo=?, rol=? WHERE id_usuario=?");
-        $stmt_update->bind_param("sssi", $nombre, $correo, $rol, $id_actualizar);
-    }
-
-    if ($stmt_update->execute()) {
-        echo "<div class='alert alert-success m-2'>¡Usuario actualizado correctamente!</div>";
-    } else {
-        echo "<div class='alert alert-danger m-2'>Error al actualizar: " . $conexion->error . "</div>";
-    }
-    $stmt_update->close();
-}
-
-
-// 4. CONTROLADOR PARA CARGAR DATOS EN EDICIÓN
-$en_modo_edicion = false;
-$u_id = ""; $u_nombre = ""; $u_correo = ""; $u_rol = "";
-
-if (isset($_GET['editar'])) {
-    $en_modo_edicion = true;
-    $id_editar = intval($_GET['editar']);
-    
-    $stmt_edit = $conexion->prepare("SELECT * FROM usuarios WHERE id_usuario = ?");
-    $stmt_edit->bind_param("i", $id_editar);
-    $stmt_edit->execute();
-    $user_edit_query = $stmt_edit->get_result();
-
-    if ($user_edit_query->num_rows > 0) {
-        $user_data = $user_edit_query->fetch_assoc();
-        $u_id = $user_data['id_usuario'];
-        $u_nombre = $user_data['nombre_usuario'];
-        $u_correo = $user_data['correo'];
-        $u_rol = $user_data['rol'];
-    }
-    $stmt_edit->close();
-}
-
-// 5. CARGAR TABLA GENERAL (donde se utilizo conexion)
-$resultado = $conexion->query("SELECT id_usuario, nombre_usuario, correo, rol FROM usuarios");
+/** @var array $listaUsuarios */
 ?>
-
-<div class="container-fluid pt-3">
-    <div class="row">
-        
-        <!-- COLUMNA DEL FORMULARIO -->
-        <div class="col-md-4 mb-4">
-            <div class="card shadow-sm border-0">
-                <div class="card-header <?= $en_modo_edicion ? 'bg-warning text-dark' : 'bg-primary text-white' ?> fw-bold">
-                    <?= $en_modo_edicion ? 'Modificar Usuario ID: '.htmlspecialchars($u_id) : 'Registrar Nuevo Usuario' ?>
-                </div>
-                <div class="card-body">
-                    <form action="main.php?page=usuarios" method="POST">
-                        <input type="hidden" name="id_usuario" value="<?= htmlspecialchars($u_id) ?>">
-
-                        <div class="mb-3">
-                            <label class="form-label">Nombre Completo</label>
-                            <input type="text" name="nombre_usuario" class="form-control" required value="<?= htmlspecialchars($u_nombre) ?>" placeholder="ej. Carlos Gómez Ruiz">
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Correo Institucional</label>
-                            <input type="email" name="correo" class="form-control" required value="<?= htmlspecialchars($u_correo) ?>" placeholder="ej. cgomez@alcaldia.gob">
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Contraseña</label>
-                            <input type="password" name="contrasena" class="form-control" <?= $en_modo_edicion ? '' : 'required' ?> placeholder="<?= $en_modo_edicion ? 'Dejar en blanco para no cambiar' : '********' ?>">
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Rol del Sistema</label>
-                            <select name="rol" class="form-select" required>
-                                <option value="Administrador" <?= $u_rol == 'Administrador' ? 'selected' : '' ?>>Administrador</option>
-                                <option value="Supervisor" <?= $u_rol == 'Supervisor' ? 'selected' : '' ?>>Supervisor</option>
-                                <option value="Operador" <?= $u_rol == 'Operador' ? 'selected' : '' ?>>Operador</option>
-                            </select>
-                        </div>
-                        
-                        <?php if ($en_modo_edicion): ?>
-                            <button type="submit" name="actualizar_usuario" class="btn btn-warning w-100 fw-bold mb-2">Actualizar Datos</button>
-                            <a href="main.php?page=usuarios" class="btn btn-outline-secondary w-100">Cancelar Edición</a>
-                        <?php else: ?>
-                            <button type="submit" name="guardar_usuario" class="btn btn-primary w-100">Guardar Usuario</button>
-                        <?php endif; ?>
-                    </form>
-                </div>
-            </div>
-            
-            <!-- Redirección adaptada al menú para las licencias -->
-            <a href="main.php?page=licencia" class="btn btn-secondary mt-3 w-100">Ir a Módulo de Licencias →</a>
+<div class="row mb-4">
+    <div class="col-12 d-flex justify-content-between align-items-center">
+        <h4 class="mb-0"></h4>
+        <div class="d-flex gap-2">
+            <button type="button" class="btn btn-primary" style="background-color: #6d9773;" data-bs-toggle="modal" data-bs-target="#modalAgregarUsuario">
+                Agregar Usuario
+            </button>
         </div>
+    </div>
+</div>
 
-        <!-- COLUMNA DE LA TABLA -->
-        <div class="col-md-8">
-            <div class="card shadow-sm border-0">
-                <div class="card-header bg-dark text-white fw-bold">Registro de Personal Autorizado</div>
-                <div class="card-body table-responsive">
-                    <table class="table table-hover align-middle">
-                        <thead class="table-light">
-                            <tr>
-                                <th>ID</th>
-                                <th>Nombre Completo</th>
-                                <th>Correo</th>
-                                <th>Rol</th>
-                                <th class="text-center">Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php if ($resultado && $resultado->num_rows > 0): ?>
-                                <?php while($row = $resultado->fetch_assoc()): ?>
+<div class="row">
+    <div class="col-md-12">
+        <div class="card shadow-sm">
+            <div class="card-header bg text-white" style="background-color: #0c3b2e;">Usuarios Registrados</div>
+            <div class="card-body table-responsive fadeTable">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Nombre de Usuario</th>
+                            <th>Correo</th>
+                            <th>Contraseña</th>
+                            <th>Rol</th>
+                            <th class="text-center">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php if (isset($listaUsuarios) && count($listaUsuarios) > 0): ?>
+                            <?php foreach ($listaUsuarios as $usuario): ?>
                                 <tr>
-                                    <td><?= $row['id_usuario'] ?></td>
-                                    <td><?= htmlspecialchars($row['nombre_usuario']) ?></td>
-                                    <td><?= htmlspecialchars($row['correo']) ?></td>
+                                    <td><?= htmlspecialchars($usuario['nombre_usuario'] ?? '') ?></td>
+                                    <td><?= htmlspecialchars($usuario['correo'] ?? '') ?></td>
+                                    <td><?= htmlspecialchars($usuario['contrasena'] ?? '') ?></td>
+                                    <td><?= htmlspecialchars($usuario['rol'] ?? '') ?></td>
                                     <td>
-                                        <?php if($row['rol'] == 'Administrador'): ?>
-                                            <span class="badge bg-primary">Administrador</span>
-                                        <?php elseif($row['rol'] == 'Supervisor'): ?>
-                                            <span class="badge bg-success">Supervisor</span>
-                                        <?php else: ?>
-                                            <span class="badge bg-warning text-dark">Operador</span>
-                                        <?php endif; ?>
-                                    </td>
+                                        
                                     <td class="text-center">
                                         <div class="btn-group btn-group-sm">
-                                            <a href="main.php?page=usuarios&editar=<?= $row['id_usuario'] ?>" class="btn btn-outline-dark" title="Editar">✏️ Editar</a>
-                                            <a href="main.php?page=usuarios&eliminar=<?= $row['id_usuario'] ?>" class="btn btn-outline-danger" onclick="return confirm('¿Estás seguro de que deseas eliminar este usuario?');" title="Eliminar">🗑️ Borrar</a>
+                                            <a href="main.php?page=usuarios&editar_usuario=<?= $usuario['id_usuario'] ?>"
+                                            class="btn btn-outline-dark" 
+                                            title="Editar">
+                                                <i class="bi bi-pencil-square"></i> Editar
+                                            </a>
+
+                                            <a href="main.php?page=usuarios&eliminar_usuario=<?= $usuario['id_usuario'] ?>" 
+                                            class="btn btn-outline-danger" 
+                                            onclick="return confirm('¿Estás seguro de que deseas eliminar este usuario?');" 
+                                            title="Eliminar">
+                                                <i class="bi bi-trash3"></i> Borrar
+                                            </a>
                                         </div>
                                     </td>
                                 </tr>
-                                <?php endwhile; ?>
-                            <?php else: ?>
-                                <tr>
-                                    <td colspan="5" class="text-center text-muted">No hay usuarios registrados actualmente.</td>
-                                </tr>
-                            <?php endif; ?>
-                        </tbody>
-                    </table>
-                </div>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <tr>
+                                <td colspan="6" class="text-center text-muted">No hay usuarios registrados o no se pudieron cargar los datos.</td>
+                            </tr>
+                        <?php endif; ?>
+                    </tbody>
+                </table>
             </div>
         </div>
-
     </div>
 </div>
+
+<!-- Modal para agregar/editar usuarios -->
+<div class="modal fade" id="modalAgregarUsuario" tabindex="-1" aria-labelledby="modalAgregarUsuarioLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg text-white" style="background-color: #0c3b2e;">
+                <h5 class="modal-title" id="modalAgregarUsuarioLabel">
+                    <?= (isset($en_modo_edicion) && $en_modo_edicion) ? 'Editar usuario' : 'Agregar un nuevo usuario' ?>
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <form action="main.php?page=usuarios" method="POST">
+                    <input type="hidden" name="id_usuario" value="<?= htmlspecialchars($u_id) ?>">
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Nombre de Usuario</label>
+                        <input type="text" name="nombre_usuario" class="form-control" required value="<?= htmlspecialchars($u_nombre ?? '') ?>">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Correo Electrónico</label>
+                        <input type="email" name="correo" class="form-control" required value="<?= htmlspecialchars($u_correo ?? '') ?>">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Contraseña</label>
+                        <input type="password" name="contrasena" class="form-control" <?= isset($en_modo_edicion) && $en_modo_edicion ? '' : 'required' ?> placeholder="<?= isset($en_modo_edicion) && $en_modo_edicion ? 'Dejar en blanco para no cambiar' : '' ?>">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Rol</label>
+                        <select name="rol" class="form-select" required>
+                            <option value="">Selecciona un rol</option>
+                            <option value="Administrador" <?= (isset($u_rol) && $u_rol === 'Administrador') ? 'selected' : '' ?>>Administrador</option>
+                            <option value="Supervisor" <?= (isset($u_rol) && $u_rol === 'Supervisor') ? 'selected' : '' ?>>Supervisor</option>
+                        </select>
+                    </div>
+
+                    <div class="d-flex justify-content-end gap-2">
+                        <?php if (isset($en_modo_edicion) && $en_modo_edicion): ?>
+                            <button type="submit" name="editar_usuario" class="btn btn-primary">Actualizar</button>
+                        <?php else: ?>
+                            <button type="submit" name="agregar_usuario" class="btn btn-primary" style="background-color: #6d9773;">Guardar</button>
+                        <?php endif; ?>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<?php if (isset($en_modo_edicion) && $en_modo_edicion): ?>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    var modal = new bootstrap.Modal(document.getElementById('modalAgregarUsuario'));
+    modal.show();
+});
+</script>
+<?php endif; ?>
