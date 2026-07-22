@@ -20,6 +20,8 @@
                 <table class="table table-hover align-middle">
                     <thead class="table-light">
                         <tr>
+                            
+                            <th>ID</th>
                             <th>Nombre de Usuario</th>
                             <th>Correo</th>
                             <th>Contraseña</th>
@@ -31,13 +33,16 @@
                         <?php if (isset($listaUsuarios) && count($listaUsuarios) > 0): ?>
                             <?php foreach ($listaUsuarios as $usuario): ?>
                                 <tr>
+                                    
+                                    <td><?= htmlspecialchars($usuario['id_usuario'] ?? '') ?></td>
+                                    
                                     <td><?= htmlspecialchars($usuario['nombre_usuario'] ?? '') ?></td>
                                     <td><?= htmlspecialchars($usuario['correo'] ?? '') ?></td>
-                                    <td><?= htmlspecialchars($usuario['contrasena'] ?? '') ?></td>
+                                    <td><span class="text-muted">********</span></td>                                    
                                     <td><?= htmlspecialchars($usuario['rol'] ?? '') ?></td>
-                                    <td>
-                                        
+                                    
                                     <td class="text-center">
+
                                         <div class="btn-group btn-group-sm">
                                             <a href="main.php?page=usuarios&editar_usuario=<?= $usuario['id_usuario'] ?>"
                                             class="btn btn-outline-dark" 
@@ -45,18 +50,24 @@
                                                 <i class="bi bi-pencil-square"></i> Editar
                                             </a>
 
-                                            <a href="main.php?page=usuarios&eliminar_usuario=<?= $usuario['id_usuario'] ?>" 
+                                            <!--<a href="main.php?page=usuarios&eliminar_usuario=<?= $usuario['id_usuario'] ?>" 
                                             class="btn btn-outline-danger" 
                                             onclick="return confirm('¿Estás seguro de que deseas eliminar este usuario?');" 
                                             title="Eliminar">
                                                 <i class="bi bi-trash3"></i> Borrar
-                                            </a>
+                                            </a>-->
+
+                                            <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#modalEliminarUsuario<?= $usuario['id_usuario'] ?>" title="Eliminar">
+                                                <i class="bi bi-trash3"></i> Borrar
+                                            </button>
+
                                         </div>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
                         <?php else: ?>
                             <tr>
+                                <!-- Cambiamos el colspan a 6 para que cubra la nueva columna del ID -->
                                 <td colspan="6" class="text-center text-muted">No hay usuarios registrados o no se pudieron cargar los datos.</td>
                             </tr>
                         <?php endif; ?>
@@ -118,6 +129,30 @@
         </div>
     </div>
 </div>
+
+<!-- Modal de confirmación para eliminar -->
+<?php foreach ($listaUsuarios as $usuario): ?>
+<div class="modal fade" id="modalEliminarUsuario<?= $usuario['id_usuario'] ?>" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title">Confirmar eliminación</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body text-center py-4">
+                <i class="bi bi-exclamation-triangle-fill text-danger display-4 mb-3"></i>
+                <h5 class="fw-bold mb-2">¿Seguro que desea borrar usuario?</h5>
+                <p class="text-muted small mb-0">Esta acción es irreversible</p>
+            </div>
+            <div class="modal-footer justify-content-center">
+                <button type="button" class="btn btn-secondary px-4" data-bs-dismiss="modal">Cancelar</button>
+                <a href="main.php?page=usuarios&eliminar_usuario=<?= $usuario['id_usuario'] ?>" class="btn btn-danger px-4">Sí, eliminar</a>
+            </div>
+        </div>
+    </div>
+</div>
+<?php endforeach; ?>
+
 
 <?php if (isset($en_modo_edicion) && $en_modo_edicion): ?>
 <script>
