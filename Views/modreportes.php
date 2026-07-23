@@ -13,7 +13,7 @@ $r_id = $r_fecha = $r_hora_entrada = $r_hora_salida = $r_id_conductor = $r_id_ve
 $f_fecha_inicio = $f_fecha_fin = $f_id_conductor = $f_id_vehiculo = '';
 $listaReportes = $listaConductores = $listaVehiculos = [];
 
-require_once __DIR__ . '/../Controllers/ReporteController.php';
+require_once __DIR__ . '/../Controllers/ReportesController.php';
 
 // Query string con los filtros activos, para reutilizarlo en los links de exportar
 $query_filtros = http_build_query([
