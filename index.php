@@ -45,7 +45,7 @@ unset($_SESSION['login_error']);
             padding: 20px;
             text-align: center;
 
-          
+        
             /* Imagen de la camioneta para el fondo */
             background: url('Camioneta.jpg') no-repeat center center;
             background-size: cover;
@@ -62,7 +62,7 @@ unset($_SESSION['login_error']);
             bottom: 0;
 
             /* Color Azul oscuro que muestra transparencia en el lado izquierdo*/
-           background: linear-gradient(#024935cc, rgba(7, 42, 85, 0.8));
+            background: linear-gradient(#024935cc, rgba(7, 42, 85, 0.8));
             z-index: 1;
         }
 

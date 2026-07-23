@@ -1,5 +1,4 @@
 <?php
-// Este archivo es incluido desde Views/modreportes.php, ya con $conexion disponible.
 
 require_once __DIR__ . '/../Models/reportes.php';
 
@@ -10,9 +9,9 @@ if (!isset($conexion)) {
 $reportesModel = new Reportes($conexion);
 
 $mensaje = "";
-$tipo_mensaje = ""; // success | danger | warning
+$tipo_mensaje = ""; 
 
-// ---------- CREAR ----------
+// CREAR
 if (isset($_POST['guardar_reporte'])) {
     $fecha = $_POST['fecha'];
     $hora_entrada = $_POST['hora_entrada'];
@@ -29,7 +28,7 @@ if (isset($_POST['guardar_reporte'])) {
     }
 }
 
-// ---------- ACTUALIZAR ----------
+// ACTUALIZAR
 if (isset($_POST['actualizar_reporte'])) {
     $id_reporte = intval($_POST['id_reporte']);
     $fecha = $_POST['fecha'];
@@ -47,7 +46,7 @@ if (isset($_POST['actualizar_reporte'])) {
     }
 }
 
-// ---------- ELIMINAR ----------
+// ELIMINAR
 if (isset($_GET['eliminar'])) {
     $id_eliminar = intval($_GET['eliminar']);
     if ($reportesModel->eliminar($id_eliminar)) {
@@ -59,7 +58,7 @@ if (isset($_GET['eliminar'])) {
     }
 }
 
-// ---------- CARGAR DATOS PARA MODO EDICIÓN ----------
+// DATOS PARA EDICION
 $en_modo_edicion = false;
 $r_id = "";
 $r_fecha = "";
@@ -82,7 +81,7 @@ if (isset($_GET['editar'])) {
     }
 }
 
-// ---------- FILTROS DE BÚSQUEDA (por GET, así se pueden reutilizar en exportar) ----------
+// FILTROS DE BÚSQUEDA
 $f_fecha_inicio = $_GET['fecha_inicio'] ?? '';
 $f_fecha_fin = $_GET['fecha_fin'] ?? '';
 $f_id_conductor = $_GET['f_id_conductor'] ?? '';
@@ -101,7 +100,6 @@ if ($hay_filtros_activos) {
     $listaReportes = $reportesModel->obtenerTodos();
 }
 
-// ---------- DATOS PARA LOS <select> DEL FORMULARIO Y DE LOS FILTROS ----------
 $listaConductores = $reportesModel->listarConductores();
 $listaVehiculos = $reportesModel->listarVehiculos();
 ?>

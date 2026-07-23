@@ -1,13 +1,4 @@
 <?php
-/**
- * Exporta el listado de Reportes respetando los filtros activos (fecha, conductor, vehículo).
- * Uso:
- *   Controllers/ExportarReportesController.php?formato=excel&fecha_inicio=...&fecha_fin=...&f_id_conductor=...&f_id_vehiculo=...
- *   Controllers/ExportarReportesController.php?formato=pdf&...
- *
- * El formato "pdf" no requiere librerías externas: genera una página HTML lista para
- * imprimir/guardar como PDF desde el propio navegador (Ctrl+P > Guardar como PDF).
- */
 
 require_once __DIR__ . '/../Config/conexion.php';
 require_once __DIR__ . '/../Models/reportes.php';
@@ -33,16 +24,16 @@ if ($hay_filtros) {
     $reportes = $reportesModel->obtenerTodos();
 }
 
-// ---------------------------------------------------------
-// EXPORTAR A EXCEL (.xls compatible, sin librerías externas)
-// ---------------------------------------------------------
+
+// EXPORTAR A EXCEL 
+
 if ($formato === 'excel') {
     header("Content-Type: application/vnd.ms-excel; charset=utf-8");
     header("Content-Disposition: attachment; filename=reportes_" . date('Ymd_His') . ".xls");
     header("Pragma: no-cache");
     header("Expires: 0");
 
-    echo "\xEF\xBB\xBF"; // BOM para que Excel respete los acentos (UTF-8)
+    echo "\xEF\xBB\xBF"; //bom para UTF-8
     echo "<table border='1'>";
     echo "<tr>
             <th>ID</th><th>Fecha</th><th>Hora Entrada</th><th>Hora Salida</th>
@@ -64,9 +55,8 @@ if ($formato === 'excel') {
     exit();
 }
 
-// ---------------------------------------------------------
-// EXPORTAR A PDF (vista imprimible del navegador)
-// ---------------------------------------------------------
+
+// EXPORTAR A PDF 
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -122,7 +112,7 @@ if ($formato === 'excel') {
     </table>
 
     <script>
-        //Descomenta la siguiente línea si quieres que se abra el diálogo de impresión automáticamente:
+
         window.onload = () => window.print();
     </script>
 </body>
