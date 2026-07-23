@@ -38,7 +38,7 @@ $page = isset($_GET['page']) ? $_GET['page'] : 'dashboard';
 
 <body>
 
-     <!-- Modal de bienvenida -->
+    <!-- Modal de bienvenida -->
     <div class="modal fade" id="modalBienvenida" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content modal-bienvenida">
@@ -46,8 +46,8 @@ $page = isset($_GET['page']) ? $_GET['page'] : 'dashboard';
             <div class="modal-body text-center">
 
                 <img src="../assets/autogest-logo.png"
-                     class="logo-bienvenida mb-3"
-                     alt="Logo AutoGest">
+                    class="logo-bienvenida mb-3"
+                    alt="Logo AutoGest">
 
                 <h3 class="fw-bold">¡Bienvenido!</h3>
 
@@ -93,7 +93,7 @@ $page = isset($_GET['page']) ? $_GET['page'] : 'dashboard';
         </div>
 
         <div class="nav flex-column w-100">
-           
+        
             <a href="main.php?page=dashboard" class="btn-nav <?php echo $page == 'dashboard' ? 'active' : ''; ?>">
                 <i class="bi bi-grid-1x2-fill me-3 fs-5"></i> <span>Dashboard</span>
             </a>
@@ -159,7 +159,7 @@ $page = isset($_GET['page']) ? $_GET['page'] : 'dashboard';
 
             case 'usuarios':
                 echo "<h2>Módulo de Usuarios</h2>"; 
-                include 'modusuario.php'; //  
+                require_once __DIR__ . '/../Controllers/UsuarioController.php'; 
                 break;
 
             case 'reportes':
