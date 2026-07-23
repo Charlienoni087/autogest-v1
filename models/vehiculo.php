@@ -18,10 +18,14 @@ class Vehiculo {
     }
 
     public function obtenerVehiculos() {
-        $sql = "SELECT * FROM Vehiculos";
-        $resultado = $this->db->query($sql);
-        return $resultado->fetch_all(MYSQLI_ASSOC);
-    }
+    $sql = "SELECT v.*, c.nombre_conductor  AS nombre_conductor
+            FROM Vehiculos v
+            LEFT JOIN Conductores c ON v.id_conductor = c.id_conductor";
+    
+    $result = $this->db->query($sql);
+    return $result->fetch_all(MYSQLI_ASSOC);
+}
+    
     public function obtenerVehiculoPorId(int $id_vehiculo) {
         $sql = "SELECT * FROM Vehiculos WHERE id_vehiculo = ?";
         $stmt = $this->db->prepare($sql);
@@ -32,14 +36,14 @@ class Vehiculo {
     }
 
    public function crearVehiculo(string $marca, string $modelo, string $color, string $chasis, 
-    string $tipo_vehiculo, string $tipo_combustible, string $estado, string $numero_poliza, string $gravamen) {
+    string $tipo_vehiculo, string $tipo_combustible, string $estado, string $numero_poliza, string $gravamen, int $id_conductor) {
     
-    $sql = "INSERT INTO Vehiculos (marca, modelo, color, chasis, tipo_vehiculo, tipo_combustible, estado, numero_poliza, gravamen) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    $sql = "INSERT INTO Vehiculos (marca, modelo, color, chasis, tipo_vehiculo, tipo_combustible, estado, numero_poliza, gravamen, id_conductor) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     
     $stmt = $this->db->prepare($sql);
-    $stmt->bind_param("sssssssss", $marca, $modelo, $color, $chasis, $tipo_vehiculo, $tipo_combustible, $estado, $numero_poliza, $gravamen);
-    //                 ^^^^^^^^^ ahora son 9 letras "s"
+    $stmt->bind_param("ssssssssss", $marca, $modelo, $color, $chasis, $tipo_vehiculo, $tipo_combustible, $estado, $numero_poliza, $gravamen, $id_conductor);
+    //                 ^^^^^^^^^ ahora son 10 letras "s"
     return $stmt->execute();
 }
 
@@ -58,6 +62,16 @@ class Vehiculo {
     $stmt->bind_param("i", $id_vehiculo);
     return $stmt->execute();
     }
+
+/*
+public function obtenerCirculaciones() {
+    $sql = "SELECT c.*, v.placa 
+            FROM Circulaciones c
+            LEFT JOIN Vehiculos v ON c.id_vehiculo = v.id_vehiculo";
+    
+    $result = $this->db->query($sql);
+    return $result->fetch_all(MYSQLI_ASSOC);
+}*/
 }
 ?>
 

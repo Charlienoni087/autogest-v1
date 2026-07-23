@@ -2,6 +2,7 @@
 
 require_once __DIR__.'/../config/conexion.php';
 require_once __DIR__.'/../Models/vehiculo.php';
+require_once __DIR__.'/../Models/conductor.php';
 
 // En tu controlador
 
@@ -21,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['agregar_vehiculo'])) 
     $gravamen = intval($_POST['gravamen']);
 
 
-    if ($modeloVehiculo->crearvehiculo($marca, $modelo, $color, $chasis, $tipo_vehiculo, $tipo_combustible, $estado, $numero_poliza, $gravamen)) {
+    if ($modeloVehiculo->crearvehiculo($marca, $modelo, $color, $chasis, $tipo_vehiculo, $tipo_combustible, $estado, $numero_poliza, $gravamen, intval($_POST['id_conductor']))) {
         header("Location: main.php?page=vehiculos&save_success=vehiculo");
         exit();
     } else {
@@ -36,7 +37,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'&& isset($_POST['editar_vehiculo'])) {
     $color = $_POST['color'];
     $chasis = $_POST['chasis'];
     $tipo_vehiculo = $_POST['tipo_vehiculo'];
-    $tipo_combustible = $_POST['combustible'];
+    $tipo_combustible = $_POST['tipo_combustible'];
     $estado = $_POST['estado_vehiculo'];
     $numero_poliza = $_POST['numero_poliza'];
     $gravamen = intval($_POST['gravamen']);
@@ -72,15 +73,15 @@ if(isset($_GET['editar_vehiculo'])){
         $u_color        = $vehicle_data['color'];
         $u_chasis       = $vehicle_data['chasis'];
         $u_tipo_vehiculo = $vehicle_data['tipo_vehiculo'];
-        $u_tipo_combustible = $vehicle_data['combustible'];
-        $u_estado       = $vehicle_data['estado_vehiculo'];
+        $u_tipo_combustible = $vehicle_data['tipo_combustible'];
+        $u_estado       = $vehicle_data['estado'];
         $u_numero_poliza = $vehicle_data['numero_poliza'];
         $u_gravamen     = $vehicle_data['gravamen'];
     }
     
 } 
 
-$listaVehiculos = $modeloVehiculo->obtenerVehiculos();
+
 
 
 if (isset($_GET['eliminar_vehiculo'])) {
@@ -93,6 +94,7 @@ if (isset($_GET['eliminar_vehiculo'])) {
     }
 }
 
+$listaVehiculos = $modeloVehiculo->obtenerVehiculos();
 
 // En este bloque de codigo se muestra un mensaje de éxito si se ha guardado un vehículo correctamente
 if (isset($_GET['save_success']) || isset($_GET['update_success']) || isset($_GET['delete_success'])) {
@@ -112,6 +114,14 @@ if (isset($_GET['save_success']) || isset($_GET['update_success']) || isset($_GE
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
           </div>';
 }
+
+// En VehiculoController.php, en el método que muestra el formulario de creación
+$conductorModel = new Conductor($conexion); // usa tu conexión
+$conductores = $conductorModel->obtenerTodos();
+
+ // ajusta según cómo inicialices tus modelos
+//$circulaciones = $modeloVehiculo->obtenerCirculaciones();
+
 
 
 
