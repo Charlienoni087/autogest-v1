@@ -168,7 +168,7 @@ $page = isset($_GET['page']) ? $_GET['page'] : 'dashboard';
                 break;
 
             default:
-                include 'dashboard.php';
+                include 'dashbord.php';
                 break;
         }
         ?>
