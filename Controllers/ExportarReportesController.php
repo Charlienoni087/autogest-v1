@@ -36,13 +36,13 @@ if ($formato === 'excel') {
     echo "\xEF\xBB\xBF"; //bom para UTF-8
     echo "<table border='1'>";
     echo "<tr>
-            <th>ID</th><th>Fecha</th><th>Hora Entrada</th><th>Hora Salida</th>
+            <th>Fecha</th><th>Hora Entrada</th><th>Hora Salida</th>
             <th>Conductor</th><th>Vehículo</th><th>Placa</th>
           </tr>";
 
     foreach ($reportes as $r) {
         echo "<tr>";
-        echo "<td>" . htmlspecialchars($r['id_reporte']) . "</td>";
+       
         echo "<td>" . htmlspecialchars($r['fecha']) . "</td>";
         echo "<td>" . htmlspecialchars($r['hora_entrada']) . "</td>";
         echo "<td>" . htmlspecialchars($r['hora_salida']) . "</td>";
@@ -88,7 +88,7 @@ if ($formato === 'excel') {
     <table>
         <thead>
             <tr>
-                <th>ID</th><th>Fecha</th><th>H. Entrada</th><th>H. Salida</th>
+                <th>Fecha</th><th>H. Entrada</th><th>H. Salida</th>
                 <th>Conductor</th><th>Vehículo</th><th>Placa</th>
             </tr>
         </thead>
@@ -98,7 +98,7 @@ if ($formato === 'excel') {
             <?php else: ?>
                 <?php foreach ($reportes as $r): ?>
                     <tr>
-                        <td><?= htmlspecialchars($r['id_reporte']) ?></td>
+                        
                         <td><?= htmlspecialchars($r['fecha']) ?></td>
                         <td><?= htmlspecialchars($r['hora_entrada']) ?></td>
                         <td><?= htmlspecialchars($r['hora_salida']) ?></td>
