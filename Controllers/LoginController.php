@@ -19,7 +19,7 @@ if ($user === '' || $pass === '') {
     exit;
 }
 
-$stmt = $conexion->prepare("SELECT id_usuario, nombre_usuario, contrasena FROM usuarios WHERE nombre_usuario = ?");
+$stmt = $conexion->prepare("SELECT id_usuario, nombre_usuario, contrasena, rol FROM usuarios WHERE nombre_usuario = ?");
 $stmt->bind_param("s", $user);
 $stmt->execute();
 $result = $stmt->get_result();
@@ -39,6 +39,7 @@ if ($result && $row = $result->fetch_assoc()) {
         session_regenerate_id(true);
         $_SESSION['id_usuario'] = (int) $row['id_usuario'];
         $_SESSION['nombre_usuario'] = htmlspecialchars($row['nombre_usuario'], ENT_QUOTES, 'UTF-8');
+        $_SESSION['rol'] = $row['rol'];
         $_SESSION['login_exitoso'] = true;
         unset($_SESSION['login_error']);
 

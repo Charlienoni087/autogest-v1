@@ -123,7 +123,6 @@ $resultado = $conexion->query("SELECT id_usuario, nombre_usuario, correo, rol FR
                             <select name="rol" class="form-select" required>
                                 <option value="Administrador" <?= $u_rol == 'Administrador' ? 'selected' : '' ?>>Administrador</option>
                                 <option value="Supervisor" <?= $u_rol == 'Supervisor' ? 'selected' : '' ?>>Supervisor</option>
-                                <option value="Operador" <?= $u_rol == 'Operador' ? 'selected' : '' ?>>Operador</option>
                             </select>
                         </div>
                         

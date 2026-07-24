@@ -1,9 +1,26 @@
 <?php
-// Datos de prueba 
-$totalVehiculos = 5;
-$conductoresActivos = 7;
-$totalLicencias = 9;
-$totalReportes = 2;
+
+include ("../Config/conexion.php");
+
+$sql = "SELECT COUNT(*) AS total FROM Vehiculos";
+$resul = $conexion->query($sql);
+$totalVehiculos = $resul->fetch_assoc()['total'];
+
+
+$sql = "SELECT COUNT(*) AS total FROM Conductores WHERE estado = 1";
+$result = $conexion->query($sql);
+$conductoresActivos = $result->fetch_assoc()['total'];
+
+
+$sql = "SELECT COUNT(*) AS total FROM Licencia";
+$res = $conexion->query($sql);
+$totalLicencias = $res->fetch_assoc()['total'];
+
+
+$sql = "SELECT COUNT(*) AS total FROM Reportes";
+$resultado = $conexion->query($sql);
+$totalReportes = $resultado->fetch_assoc()['total'];
+
 ?>
 
 <!-- Contenedor del Dashboard  -->
