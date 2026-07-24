@@ -14,9 +14,7 @@ class Reportes {
         $this->db = $conexion;
     }
 
-    /**
-     * Trae todos los reportes con datos de conductor y vehiculo (para mostrar en tabla).
-     */
+
     public function obtenerTodos(): array {
         $sql = "SELECT r.id_reporte, r.fecha, r.hora_entrada, r.hora_salida,
                        r.id_conductor, r.id_vehiculo,
@@ -32,9 +30,6 @@ class Reportes {
         return $resultado ? $resultado->fetch_all(MYSQLI_ASSOC) : [];
     }
 
-    /**
-     * Trae un reporte puntual por id (para el formulario de edicion).
-     */
     public function obtenerPorId(int $id_reporte): ?array {
         $sql = "SELECT * FROM reportes WHERE id_reporte = ?";
         $stmt = $this->db->prepare($sql);
@@ -45,10 +40,7 @@ class Reportes {
         return $fila ?: null;
     }
 
-    /**
-     * Filtra reportes por rango de fechas, conductor y/o vehiculo.
-     * Cualquier parametro que llegue null/vacio se ignora en el WHERE.
-     */
+   
     public function obtenerFiltrados(?string $fecha_inicio, ?string $fecha_fin, ?int $id_conductor, ?int $id_vehiculo): array {
         $condiciones = [];
         $tipos = "";
@@ -130,18 +122,14 @@ class Reportes {
         return $stmt->execute();
     }
 
-    /**
-     * Para llenar el <select> de conductores en el formulario.
-     */
+   
     public function listarConductores(): array {
         $sql = "SELECT id_conductor, nombre_conductor FROM conductores ORDER BY nombre_conductor";
         $resultado = $this->db->query($sql);
         return $resultado ? $resultado->fetch_all(MYSQLI_ASSOC) : [];
     }
 
-    /**
-     * Para llenar el <select> de vehiculos en el formulario (con placa incluida).
-     */
+    
     public function listarVehiculos(): array {
         $sql = "SELECT v.id_vehiculo, v.marca, v.modelo, ci.placa
                 FROM vehiculos v

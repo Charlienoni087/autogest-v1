@@ -1,6 +1,6 @@
 /* assets/css/style.css */
-body {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+body.login-page {
+    background: linear-gradient(135deg, #f3f4f8 0%, #764ba2 100%);
     height: 100vh;
     display: flex;
     align-items: center;
@@ -24,5 +24,11 @@ body {
 
 .btn-primary:hover {
     background-color: #5a3780;
+}
+
+.modal-header-custom {
+    background-color: #0c3b2e;
+    color: white;
+
 }
 
