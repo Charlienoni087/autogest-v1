@@ -13,9 +13,9 @@ $r_id = $r_fecha = $r_hora_entrada = $r_hora_salida = $r_id_conductor = $r_id_ve
 $f_fecha_inicio = $f_fecha_fin = $f_id_conductor = $f_id_vehiculo = '';
 $listaReportes = $listaConductores = $listaVehiculos = [];
 
-require_once __DIR__ . '/../Controllers/ReporteController.php';
+require_once __DIR__ . '/../Controllers/ReportesController.php';
 
-// Query string con los filtros activos, para reutilizarlo en los links de exportar
+// Query string con los filtros activos
 $query_filtros = http_build_query([
     'fecha_inicio' => $f_fecha_inicio,
     'fecha_fin' => $f_fecha_fin,
@@ -87,10 +87,10 @@ $query_filtros = http_build_query([
             </div>
         </div>
 
-        <!-- COLUMNA DE FILTROS + TABLA -->
+        <!-- COLUMNA DE FILTROS TABLA -->
         <div class="col-md-8">
 
-            <!-- FILTROS DE BÚSQUEDA -->
+         
             <div class="card shadow-sm border-0 mb-3">
                 <div class="card-header bg-light fw-bold">Filtrar Reportes</div>
                 <div class="card-body">
@@ -129,8 +129,8 @@ $query_filtros = http_build_query([
                         <div class="col-12 mt-2">
                             <button type="submit" class="btn btn-sm btn-primary">🔍 Filtrar</button>
                             <a href="main.php?page=reportes" class="btn btn-sm btn-outline-secondary">Limpiar</a>
-                            <a href="Controllers/ExportarReportesController.php?formato=excel&<?= $query_filtros ?>" class="btn btn-sm btn-success float-end ms-2">📊 Exportar Excel</a>
-                            <a href="Controllers/ExportarReportesController.php?formato=pdf&<?= $query_filtros ?>" target="_blank" class="btn btn-sm btn-danger float-end">📄 Exportar PDF</a>
+                            <a href="/AUTOGEST/Controllers/ExportarReportesController.php?formato=excel&<?= $query_filtros ?>" class="btn btn-sm btn-success float-end ms-2">📊 Exportar Excel</a>
+                            <a href="/AUTOGEST/Controllers/ExportarReportesController.php?formato=pdf&<?= $query_filtros ?>" target="_blank" class="btn btn-sm btn-danger float-end">📄 Exportar PDF</a>
                         </div>
                     </form>
                 </div>

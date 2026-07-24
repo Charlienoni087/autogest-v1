@@ -5,7 +5,7 @@ $categorias_guardadas = !empty($u_categorias) ? explode(',', $u_categorias) : []
 ?>
 <div class="row mb-4">
         <div class="col-12 d-flex justify-content-between align-items-center">
-            <h4 class="mb-0">Conductores</h4>
+            <h4 class="mb-0"></h4>
             <div class="d-flex gap-2">
                 <button type="button" class="btn btn-primary" style="background-color: #6d9773;" data-bs-toggle="modal" data-bs-target="#modalAgregarConductor">
                     Agregar Conductor
@@ -101,7 +101,6 @@ $categorias_guardadas = !empty($u_categorias) ? explode(',', $u_categorias) : []
                     <table class="table table-hover align-middle">
                         <thead class="table-light">
                             <tr>
-                                <th>ID</th>
                                 <th>N° Licencia</th>
                                 <th>Tipo</th>
                                 <th>Categorías</th>
@@ -113,7 +112,7 @@ $categorias_guardadas = !empty($u_categorias) ? explode(',', $u_categorias) : []
                             <?php if (isset($listaLicencias) && is_array($listaLicencias) && count($listaLicencias) > 0): ?>
                                 <?php foreach ($listaLicencias as $licencia): ?>
                                     <tr>
-                                        <td><?= htmlspecialchars($licencia['id_licencia']) ?></td>
+                                       
                                         <td><?= htmlspecialchars($licencia['numero_licencia']) ?></td>
                                         <td><?= htmlspecialchars($licencia['tipo_licencia']) ?></td>
                                         <td><?= htmlspecialchars($licencia['categorias']) ?></td>

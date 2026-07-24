@@ -36,19 +36,27 @@ unset($_SESSION['login_error']);
         <!-- SECCIÓN IZQUIERDA: Identidad Visual en la parte azul , donde se mmuestra la imagen de la camioneta-->
         <div class="brand-section">
             <div class="brand-content">
+
+                <!-- Contenedor del logotipo real de AutoGest -->
+        <div class="brand-logo-container">
+            <img src="Assets/autogest-logo.png" class="brand-logo">
+        </div>
             
-                <div class="brand-title">AUTOGEST</div>
-                <div class="brand-subtitle">Sistema de Inventario de Vehículos</div>
+                <div class="brand-title"></div>
+                <div class="brand-subtitle"></div>
                 
-                <div class="brand-footer">
-                    <i class="fa-solid fa-building-columns"></i>
-                    <p>Alcaldía Municipal</p>
+                <div class="">
+                   
+                    <p></p>
                 </div>
             </div>
         </div>
 
         <!-- SECCIÓN DERECHA: Formulario -->
         <div class="form-section">
+          
+
+            <div class="login-card text-center">
             
             <div class="login-card text-center">
                 
