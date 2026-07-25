@@ -109,8 +109,8 @@ $page = isset($_GET['page']) ? $_GET['page'] : 'dashboard';
             <a href="main.php?page=reportes" class="btn-nav <?php echo $page == 'reportes' ? 'active' : ''; ?>">
                 <i class="bi bi-bar-chart-line-fill me-3 fs-5"></i> <span>Reportes</span>
             </a>
-            <a href="main.php?page=licencia" class="btn-nav <?php echo $page == 'licencia' ? 'active' : ''; ?>">
-                <i class="bi bi-card-text me-3 fs-5"></i> <span>Mantenimiento</span>
+            <a href="main.php?page=mantenimiento" class="btn-nav <?php echo $page == 'mantenimiento' ? 'active' : ''; ?>">
+                <i class="bi bi-wrench-adjustable-circle me-3 fs-5"></i> <span>Mantenimiento</span>
             </a>
         </div>
     </div>
@@ -147,9 +147,9 @@ $page = isset($_GET['page']) ? $_GET['page'] : 'dashboard';
                 require_once __DIR__ . '/../Controllers/VehiculoController.php';
                 break;
 
-            case 'licencia':
-                echo "<h2>Módulo de Mantenimiento</h2>"; 
-                include 'modMantenimiento.php';
+            case 'mantenimiento':
+                // Mandamos a llamar al controlador en lugar de la vista directa
+                require_once __DIR__ . '/../Controllers/MantenimientoController.php';
                 break;
 
             case 'conductores':

@@ -14,7 +14,8 @@ class UsuarioModel {
     }
 
     public function autenticar(string $usuario, string $password): ?array {
-        $query = "SELECT id, usuario, password FROM usuarios WHERE usuario = ?";
+        // Corregidos los nombres de columnas para que coincidan con tu BD
+        $query = "SELECT id_usuario, nombre_usuario, contrasena, rol FROM usuarios WHERE nombre_usuario = ?";
         $stmt = $this->db->prepare($query);
         $stmt->bind_param("s", $usuario);
         $stmt->execute();
@@ -22,7 +23,8 @@ class UsuarioModel {
         $resultado = $stmt->get_result();
 
         if ($fila = $resultado->fetch_assoc()) {
-            if ($password === $fila['password']) {
+            // Soporta hash de contraseña o texto plano
+            if (password_verify($password, $fila['contrasena']) || $password === $fila['contrasena']) {
                 return $fila;
             }
         }
@@ -30,8 +32,8 @@ class UsuarioModel {
         return null;
     }
 
-    // Listar todos los usuarios (Reemplaza a obtenerUsuarios)
-    public function obtenerTodos(): array {
+    // Método que requiere UsuarioController.php
+    public function obtenerUsuarios(): array {
         $sql = "SELECT id_usuario, nombre_usuario, correo, contrasena, rol FROM usuarios";
         $resultado = $this->db->query($sql);
         
@@ -40,6 +42,11 @@ class UsuarioModel {
         }
         
         return $resultado->fetch_all(MYSQLI_ASSOC);
+    }
+
+    // Alias por si usas obtenerTodos() en otra parte
+    public function obtenerTodos(): array {
+        return $this->obtenerUsuarios();
     }
 
     // Obtener un usuario específico
@@ -58,7 +65,7 @@ class UsuarioModel {
         return $resultado->fetch_assoc() ?: null;
     }
 
-    // Agregar Usuario (Reemplaza a agregarUsuario)
+    // Agregar Usuario
     public function crear(string $nombre, string $correo, string $contrasena, string $rol): bool {
         $sql = "INSERT INTO usuarios (nombre_usuario, correo, contrasena, rol) VALUES (?, ?, ?, ?)";
         $stmt = $this->db->prepare($sql);
@@ -73,7 +80,7 @@ class UsuarioModel {
         return $stmt->execute();
     }
 
-    // Editar Usuario (Reemplaza a editarUsuario)
+    // Editar Usuario
     public function actualizar(int $id, string $nombre, string $correo, string $contrasena, string $rol): bool {
         // Si la contraseña viene vacía, actualizamos todo MENOS la contraseña
         if (empty(trim($contrasena))) {
@@ -101,7 +108,7 @@ class UsuarioModel {
         return $stmt->execute();
     }
 
-    // Eliminar Usuario (Reemplaza a eliminarUsuario)
+    // Eliminar Usuario
     public function eliminar(int $id): bool {
         $sql = "DELETE FROM usuarios WHERE id_usuario = ?";
         $stmt = $this->db->prepare($sql);
@@ -115,7 +122,3 @@ class UsuarioModel {
     }
 }
 ?>
-
-
-
-
