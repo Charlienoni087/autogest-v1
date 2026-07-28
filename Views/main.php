@@ -21,6 +21,7 @@ unset($_SESSION['login_exitoso']);
 
 $permisos = [
     'Administrador' => ['dashboard', 'vehiculos', 'conductores', 'usuarios', 'reportes', 'mantenimiento', 'logout'],
+    'SuperAdmin' => ['dashboard', 'vehiculos', 'conductores', 'usuarios', 'reportes', 'mantenimiento', 'logout'],
     'Supervisor' => ['dashboard', 'vehiculos', 'conductores', 'reportes', 'licencia', 'logout'],
 ];
 
@@ -47,7 +48,7 @@ $modulosPermitidos = $permisos[$rol] ?? [];
 <body>
 
      <!-- Modal de bienvenida -->
-    <div class="modal fade" id="modalBienvenida" tabindex="-1" aria-hidden="true">
+    <!--<div class="modal fade" id="modalBienvenida" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content modal-bienvenida">
 
@@ -81,7 +82,7 @@ $modulosPermitidos = $permisos[$rol] ?? [];
 
             </div>
         </div>
-    </div>
+    </div>-->
 
     <!--Codigo para la animacion de la bienvenida-->
     <?php if ($mostrarBienvenida): ?>
@@ -140,14 +141,23 @@ $modulosPermitidos = $permisos[$rol] ?? [];
 
             <br>
             <br>
-            <br>
             
             <form id="formLogout" action="../Controllers/LogoutController.php" method="POST" style="display: none;">
             </form>
 
-            <a href="#" class="btn-nav" id="btnLogout" data-bs-toggle="modal" data-bs-target="#modalLogout">
-                <i class="bi bi-box-arrow-right me-3 fs-5"></i> <span>Cerrar sesión</span>
-            </a>
+            <div class="userCard">
+                <div class="user-info">
+                    <img src="../assets/anadir-contacto.png" alt="Icono de Usuario" class="user-avatar">
+                    <div class="user-details">
+                        <h4 class="user-name"><?= $_SESSION['nombre_usuario'] ?></h4>
+                        <h5 class="user-role"><?= $_SESSION['rol'] ?></h5>
+                    </div>
+                </div>
+                
+                <a href="#" class="btn-logout" id="btnLogout" data-bs-toggle="modal" data-bs-target="#modalLogout">
+                    <i class="bi bi-box-arrow-right"></i> Cerrar sesión
+                </a>
+            </div>
 
         </div>
     </div>
@@ -200,7 +210,7 @@ $modulosPermitidos = $permisos[$rol] ?? [];
 
                     case 'vehiculos':
                         echo "<h2>Módulo de Vehículos</h2>";
-                        include 'modVehiculo.php';
+                        require_once __DIR__ . '/../Controllers/VehiculoController.php';
                         break;
 
                     case 'conductores':
@@ -210,7 +220,7 @@ $modulosPermitidos = $permisos[$rol] ?? [];
 
                     case 'usuarios':
                         echo "<h2>Módulo de Usuarios</h2>";
-                        include 'modusuario.php';
+                        require_once __DIR__ . '/../Controllers/UsuarioController.php';
                         break;
 
                     case 'reportes':
@@ -220,7 +230,7 @@ $modulosPermitidos = $permisos[$rol] ?? [];
 
                     case 'mantenimiento':
                         echo "<h2>Módulo de Mantenimiento</h2>";
-                        include 'modMantenimiento.php';
+                        require_once __DIR__ . '/../Controllers/MantenimientoController.php';
                         break;
 
                     default:

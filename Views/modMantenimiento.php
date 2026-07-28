@@ -1,10 +1,13 @@
+<?php
+/** @var array $listaVehiculos */
+?>
+
 <div class="container-fluid px-4">
     <div class="d-flex justify-content-between align-items-center mt-4 mb-4">
         <h1 class="h3 text-dark fw-bold">
-            <i class="bi bi-wrench-adjustable-circle me-2"></i> Módulo de Mantenimiento
         </h1>
         <button type="button" class="btn text-white" style="background-color: #6d9773;" data-bs-toggle="modal" data-bs-target="#modalAgregarMantenimiento">
-            <i class="bi bi-plus-circle me-1"></i> Agregar Mantenimiento
+            <i class="bi bi-plus-lg me-2"></i> Agregar Mantenimiento
         </button>
     </div>
 
@@ -17,8 +20,7 @@
                 <table class="table table-hover align-middle mb-0">
                     <thead class="table-light text-secondary">
                         <tr>
-                            <th class="py-3 ps-4">#</th>
-                            <th class="py-3">Vehículo</th>
+                            <th class="py-3">Vehiculo</th>
                             <th class="py-3">F. Entrada</th>
                             <th class="py-3">F. Salida</th>
                             <th class="py-3">Descripción</th>
@@ -31,7 +33,6 @@
                         <?php if (!empty($listaMantenimientos)): ?>
                             <?php foreach ($listaMantenimientos as $index => $m): ?>
                                 <tr>
-                                    <td class="ps-4"><?php echo $index + 1; ?></td>
                                     <td><?php echo htmlspecialchars($m['marca'] . ' ' . $m['modelo']); ?></td>
                                     <td><?php echo htmlspecialchars($m['fecha_mantenimiento']); ?></td>
                                     <td><?php echo !empty($m['fecha_salida']) ? htmlspecialchars($m['fecha_salida']) : '<span class="text-muted">En taller</span>'; ?></td>

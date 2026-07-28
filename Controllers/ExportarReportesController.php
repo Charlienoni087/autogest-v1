@@ -64,16 +64,130 @@ if ($formato === 'excel') {
     <meta charset="UTF-8">
     <title>Reporte de Circulación - AutoGest</title>
     <style>
-        body { font-family: Arial, sans-serif; color: #012939; margin: 30px; }
-        h2 { color: #1e09df; margin-bottom: 0; }
-        p.subtitulo { color: #64748b; margin-top: 4px; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th, td { border: 1px solid #cbd5e1; padding: 8px; font-size: 13px; text-align: left; }
-        th { background-color: #d1f3f7; color: #003598; }
+        :root {
+            --azul-oscuro: #0c3b2e;
+            --azul-primario: #0c3b2e;
+            --azul-acento: #0c3b2e;
+            --celeste: #d1f3f7;
+            --gris-texto: #64748b;
+            --borde: #cbd5e1;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            color: var(--azul-oscuro);
+            margin: 0;
+            padding: 30px 40px;
+            background: #ffffff;
+        }
+
+        /* ---- ENCABEZADO CON LOGO ---- */
+        .encabezado {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 3px solid var(--azul-acento);
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+        }
+
+        .encabezado-izquierda {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .encabezado-izquierda img {
+            height: 60px;
+            width: auto;
+            object-fit: contain;
+        }
+
+        .encabezado-titulos h2 {
+            color: var(--azul-primario);
+            margin: 0;
+            font-size: 22px;
+            letter-spacing: 0.3px;
+        }
+
+        .encabezado-titulos p.subtitulo {
+            color: var(--gris-texto);
+            margin: 2px 0 0;
+            font-size: 13px;
+        }
+
+        .encabezado-derecha {
+            text-align: right;
+            font-size: 12px;
+            color: var(--gris-texto);
+        }
+
+        .encabezado-derecha strong {
+            display: block;
+            color: var(--azul-oscuro);
+            font-size: 13px;
+        }
+
+        /* ---- TABLA ---- */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+        }
+
+        th, td {
+            border: 1px solid var(--borde);
+            padding: 9px 10px;
+            font-size: 13px;
+            text-align: left;
+        }
+
+        th {
+            background-color: var(--celeste);
+            color: var(--azul-primario);
+            text-transform: uppercase;
+            font-size: 11.5px;
+            letter-spacing: 0.4px;
+        }
+
         tr:nth-child(even) { background-color: #f4f9fb; }
-        .no-imprimir { margin-bottom: 15px; }
+        tr:hover { background-color: #eaf6f8; }
+
+        /* ---- PIE DE PÁGINA ---- */
+        .pie-pagina {
+            margin-top: 30px;
+            padding-top: 10px;
+            border-top: 1px solid var(--borde);
+            font-size: 11px;
+            color: var(--gris-texto);
+            text-align: center;
+        }
+
+        .no-imprimir {
+            margin-bottom: 20px;
+            text-align: right;
+        }
+
+        .no-imprimir button {
+            background-color: var(--azul-acento);
+            color: #fff;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 13px;
+            cursor: pointer;
+        }
+
+        .no-imprimir button:hover {
+            background-color: var(--azul-primario);
+        }
+
         @media print {
             .no-imprimir { display: none; }
+            body { padding: 10px 20px; }
         }
     </style>
 </head>
@@ -82,8 +196,18 @@ if ($formato === 'excel') {
         <button onclick="window.print()">🖨️ Guardar como PDF / Imprimir</button>
     </div>
 
-    <h2>AutoGest — Reporte de Circulación</h2>
-    <p class="subtitulo">Generado el <?= date('d-m-Y H:i') ?></p>
+    <div class="encabezado">
+        <div class="encabezado-izquierda">
+            <img src="../assets/autogest-logo.png" alt="Logo AutoGest">
+            <div class="encabezado-titulos">
+                <h2>AutoGest</h2>
+                <p class="subtitulo">Control de entradas y salidas de vehículos</p>
+            </div>
+        </div>
+        <div class="encabezado-derecha">
+            <strong>Generado el <?= date('d-m-Y') ?></strong>
+        </div>
+    </div>
 
     <table>
         <thead>
@@ -94,11 +218,10 @@ if ($formato === 'excel') {
         </thead>
         <tbody>
             <?php if (empty($reportes)): ?>
-                <tr><td colspan="7" style="text-align:center;">No hay reportes para los filtros seleccionados.</td></tr>
+                <tr><td colspan="6" style="text-align:center;">No hay reportes para los filtros seleccionados.</td></tr>
             <?php else: ?>
                 <?php foreach ($reportes as $r): ?>
                     <tr>
-                        
                         <td><?= htmlspecialchars($r['fecha']) ?></td>
                         <td><?= htmlspecialchars($r['hora_entrada']) ?></td>
                         <td><?= htmlspecialchars($r['hora_salida']) ?></td>
@@ -111,8 +234,11 @@ if ($formato === 'excel') {
         </tbody>
     </table>
 
-    <script>
+    <div class="pie-pagina">
+        Reporte generado automáticamente por el sistema AutoGest
+    </div>
 
+    <script>
         window.onload = () => window.print();
     </script>
 </body>

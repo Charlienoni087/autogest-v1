@@ -1,15 +1,19 @@
 <?php
 
-require_once __DIR__.'/../config/conexion.php';
-require_once __DIR__.'/../Models/vehiculo.php';
-require_once __DIR__.'/../Models/conductor.php';
-require_once __DIR__.'/../Models/circulacion.php';
+require_once __DIR__ . '/../Config/conexion.php';
+require_once __DIR__ . '/../Models/vehiculo.php';
+require_once __DIR__ . '/../Models/conductor.php';
+require_once __DIR__ . '/../Models/circulacion.php';
 
 // En tu controlador
 
 $modeloVehiculo = new Vehiculo($conexion);
 $modeloCirculacion = new Circulacion($conexion);
+$conductorModel = new Conductor($conexion); // usa tu conexión
 
+// En VehiculoController.php, en el método que muestra el formulario de creación
+$conductores = $conductorModel->obtenerTodos();
+$circulaciones = $modeloCirculacion->obtenerCirculaciones(); // obtiene todas las circulaciones
 
 //marca, modelo, color, chasis, tipo_vehiculo, tipo_combustible, estado, numero_poliza, gravamen
 $en_modo_edicion = false;
@@ -39,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && (isset($_POST['agregar_vehiculo']) 
         // Ejecutar acción según el botón presionado
         if (isset($_POST['agregar_vehiculo'])) {
             if ($modeloVehiculo->crearVehiculo($marca, $modelo, $color, $chasis, $tipo_vehiculo, $tipo_combustible, $estado, $numero_poliza, $gravamen, $id_conductor, $id_circulacion)) {
-                header("Location: main.php?page=vehiculos&save_success=vehiculo");
+                header("Location: /AutoGest/Views/main.php?page=vehiculos&save_success=vehiculo");
                 exit();
             } else {
                 $error = "Error al guardar el vehículo en la base de datos.";
@@ -47,7 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && (isset($_POST['agregar_vehiculo']) 
         } elseif (isset($_POST['editar_vehiculo'])) {
             $id = intval($_POST['id_vehiculo']);
             if ($modeloVehiculo->actualizarVehiculo($id, $marca, $modelo, $color, $chasis, $tipo_vehiculo, $tipo_combustible, $estado, $numero_poliza, $gravamen, $id_conductor, $id_circulacion)) {
-                header('Location: main.php?page=vehiculos&update_success=vehiculo');
+                header('Location: /AutoGest/Views/main.php?page=vehiculos&update_success=vehiculo');
                 exit();
             } else {
                 $error = "Error al actualizar el vehículo en la base de datos.";
@@ -60,7 +64,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && (isset($_POST['agregar_vehiculo']) 
 if (isset($_GET['eliminar_vehiculo'])) {
     $id = intval($_GET['eliminar_vehiculo']);
     if ($modeloVehiculo->eliminarVehiculo($id)) {
-        header("Location: main.php?page=vehiculos&delete_success=vehiculo");
+        header("Location: /AutoGest/Views/main.php?page=vehiculos&delete_success=vehiculo");
         exit();
     } else {
         echo "<div class='alert alert-danger m-2'>Error al eliminar el vehículo.</div>";
@@ -138,7 +142,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['agregar_circulacion']
     $placa = $_POST['placa'];
 
     if ($modeloCirculacion->crearCirculacion($codigo_circulacion, $cilindraje, $tonelaje, $pasajeros, $placa)) {
-        header("Location: main.php?page=vehiculos&save_success=circulacion");
+        header("Location: /AutoGest/Views/main.php?page=vehiculos&save_success=circulacion");
         exit();
     } else {
         echo "<div class='alert alert-danger m-2'>Error al guardar la circulación en la base de datos.</div>";
@@ -156,7 +160,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['editar_circulacion'])
     $id = intval($_POST['id_circulacion']);
 
     if ($modeloCirculacion->actualizarCirculacion($id, $codigo_circulacion, $cilindraje, $tonelaje, $pasajeros, $placa)) {
-        header('Location: main.php?page=vehiculos&update_success=circulacion');
+        header('Location: /AutoGest/Views/main.php?page=vehiculos&update_success=circulacion');
         exit();
     } else {
         echo "<div class='alert alert-danger m-2'>Error al actualizar la circulación en la base de datos.</div>";
@@ -200,7 +204,7 @@ if (isset($_GET['eliminar_circulacion'])) {
     $id = intval($_GET['eliminar_circulacion']);
 
     if ($modeloCirculacion->estaEnUso($id)) {
-        header("Location: main.php?page=vehiculos&error=circulacion_en_uso");
+        header("Location: /AutoGest/Views/main.php?page=vehiculos&error=circulacion_en_uso");
         exit();
     }
 
@@ -246,10 +250,7 @@ if (isset($_GET['save_success']) || isset($_GET['update_success']) || isset($_GE
           </div>';
 }
 
-// En VehiculoController.php, en el método que muestra el formulario de creación
-$conductorModel = new Conductor($conexion); // usa tu conexión
-$conductores = $conductorModel->obtenerTodos();
-$circulaciones = $modeloCirculacion->obtenerCirculaciones(); // obtiene todas las circulaciones
+
 
  // ajusta según cómo inicialices tus modelos
 //$circulaciones = $modeloVehiculo->obtenerCirculaciones();
@@ -257,6 +258,6 @@ $circulaciones = $modeloCirculacion->obtenerCirculaciones(); // obtiene todas la
 
 
 
-require_once __DIR__ .'/../Views/modVehiculo.php';
+require_once __DIR__ . '/../Views/modVehiculo.php';
 
 ?>

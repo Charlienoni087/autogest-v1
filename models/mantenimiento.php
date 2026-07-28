@@ -9,8 +9,8 @@ class MantenimientoModel {
 
     public function obtenerMantenimientos() {
         $query = "SELECT m.*, v.marca, v.modelo 
-                FROM Mantenimiento m
-                INNER JOIN Vehiculos v ON m.id_vehiculo = v.id_vehiculo
+                FROM mantenimiento m
+                INNER JOIN vehiculos v ON m.id_vehiculo = v.id_vehiculo
                 ORDER BY m.fecha_mantenimiento DESC";
                 
         $resultado = $this->conexion->query($query);
@@ -21,16 +21,27 @@ class MantenimientoModel {
     }
 
     public function obtenerVehiculos() {
-        $query = "SELECT id_vehiculo, marca, modelo, chasis FROM Vehiculos";
+        $query = "SELECT id_vehiculo, marca, modelo, chasis FROM vehiculos";
         $resultado = $this->conexion->query($query);
         if ($resultado) {
             return $resultado->fetch_all(MYSQLI_ASSOC);
         }
         return [];
     }
+    public function obtenerVehiculosPorId($id) {
+        $query = "SELECT id_vehiculo, marca, modelo, chasis FROM vehiculos WHERE id_vehiculo = ?";
+        $stmt = $this->conexion->prepare($query);
+        if ($stmt) {
+            $stmt->bind_param("i", $id);
+            $stmt->execute();
+            $resultado = $stmt->get_result();
+            return $resultado->fetch_assoc() ?: [];
+        }
+        return [];
+    }
 
     public function obtenerMantenimientoPorId($id) {
-        $query = "SELECT * FROM Mantenimiento WHERE id_mantenimiento = ?";
+        $query = "SELECT * FROM mantenimiento WHERE id_mantenimiento = ?";
         $stmt = $this->conexion->prepare($query);
         $stmt->bind_param("i", $id);
         $stmt->execute();
@@ -39,7 +50,7 @@ class MantenimientoModel {
 
     // para las fecha de salida
     public function insertarMantenimiento($id_vehiculo, $fecha_mantenimiento, $fecha_salida, $descripcion, $costo, $estado) {
-        $query = "INSERT INTO Mantenimiento (id_vehiculo, fecha_mantenimiento, fecha_salida, descripcion, costo, estado) VALUES (?, ?, ?, ?, ?, ?)";
+        $query = "INSERT INTO mantenimiento (id_vehiculo, fecha_mantenimiento, fecha_salida, descripcion, costo, estado) VALUES (?, ?, ?, ?, ?, ?)";
         $stmt = $this->conexion->prepare($query);
         // "issds" -> i(int), s(string), s(string), d(double/float), s(string) con fecha_salida añadida pasa a "isssds"
         $stmt->bind_param("isssds", $id_vehiculo, $fecha_mantenimiento, $fecha_salida, $descripcion, $costo, $estado);
@@ -48,7 +59,7 @@ class MantenimientoModel {
 
     // actualiza los registro existente
     public function actualizarMantenimiento($id, $id_vehiculo, $fecha_mantenimiento, $fecha_salida, $descripcion, $costo, $estado) {
-        $query = "UPDATE Mantenimiento SET id_vehiculo = ?, fecha_mantenimiento = ?, fecha_salida = ?, descripcion = ?, costo = ?, estado = ? WHERE id_mantenimiento = ?";
+        $query = "UPDATE mantenimiento SET id_vehiculo = ?, fecha_mantenimiento = ?, fecha_salida = ?, descripcion = ?, costo = ?, estado = ? WHERE id_mantenimiento = ?";
         $stmt = $this->conexion->prepare($query);
         $stmt->bind_param("isssdsi", $id_vehiculo, $fecha_mantenimiento, $fecha_salida, $descripcion, $costo, $estado, $id);
         return $stmt->execute();
@@ -56,7 +67,7 @@ class MantenimientoModel {
 
     // para eliminar registro
     public function eliminarMantenimiento($id) {
-        $query = "DELETE FROM Mantenimiento WHERE id_mantenimiento = ?";
+        $query = "DELETE FROM mantenimiento WHERE id_mantenimiento = ?";
         $stmt = $this->conexion->prepare($query);
         $stmt->bind_param("i", $id);
         return $stmt->execute();

@@ -248,3 +248,157 @@
         transform:translateX(-38px);
     }
 }
+
+#tarjeta1,
+#tarjeta2,
+#tarjeta3,
+#tarjeta4 {
+    opacity: 0;
+    animation: aparecerTarjeta 0.8s ease-out forwards;
+}
+
+#tarjeta1 {
+    animation-delay: 0.1s;
+}
+
+#tarjeta2 {
+    animation-delay: 0.25s;
+}
+
+#tarjeta3 {
+    animation-delay: 0.4s;
+}
+
+#tarjeta4 {
+    animation-delay: 0.55s;
+}
+
+@keyframes aparecerTarjeta {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+#grafico {
+    opacity: 0;
+    animation:aparecerGrafico 0.8s ease-out forwards;
+}
+
+#grafico{
+    animation-delay: 0.40s;
+}
+
+
+@keyframes aparecerGrafico {
+    from {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+#movimiento{
+    opacity: 0 ;
+    animation: aparecerMovimiento 0.8s ease-out forwards;
+}
+
+#movimiento{
+    animation-delay: 0,30s;
+}
+
+@keyframes aparecerMovimiento{
+    from {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.userCard {
+    background-color: #c49a38; 
+    padding: 12px 15px; 
+    border-radius: 12px; 
+    margin: 10px 15px 15px 15px; 
+    display: flex;
+    flex-direction: column;
+    gap: 12px; 
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin-top: auto;
+}
+
+.userCard .user-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.userCard .user-avatar {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #083323; 
+    background-color: #083323;
+}
+
+.userCard .user-details {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    overflow: hidden; 
+}
+
+.userCard .user-name {
+    color: #083323;
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 700;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.userCard .user-role {
+    color: #124d36;
+    margin: 2px 0 0 0;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.userCard .btn-logout {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    padding: 8px; 
+    background-color: transparent;
+    color: #083323;
+    border: 1.5px solid #083323;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: all 0.2s ease-in-out;
+}
+
+.userCard .btn-logout:hover {
+    background-color: #083323;
+    color: #c49a38; 
+}

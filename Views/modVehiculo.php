@@ -2,6 +2,9 @@
 /** @var array $listaVehiculos */
 /** @var array $conductores */
 /** @var array $circulaciones */
+$circulaciones = $circulaciones??[];
+$en_modo_edicion = $en_modo_edicion??[];
+$en_modo_edicion_circulacion = $en_modo_edicion_circulacion??[];
 ?>
 
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -12,10 +15,10 @@
     <div class="col-12 d-flex justify-content-between align-items-center">
         <h4 class="mb-0"></h4>
         <div class="d-flex gap-2">
-                <button type="button" class="btn btn-primary" style="background-color: #0c3b2e;" data-bs-toggle="modal" data-bs-target="#modalAgregarVehiculo">
+                <button type="button" class="btn btn-primary" style="background-color: #6d9773;" data-bs-toggle="modal" data-bs-target="#modalAgregarVehiculo">
                  <i class="bi bi-plus-lg me-2"></i> Agregar Vehículo
                 </button>
-                <button type="button" class="btn btn-secondary" style="background-color: #0c3b2e;"data-bs-toggle="modal" data-bs-target="#modalAgregarCirculacion">
+                <button type="button" class="btn btn-secondary" style="background-color: #6d9773;"data-bs-toggle="modal" data-bs-target="#modalAgregarCirculacion">
             
                     <i class="bi bi-plus-lg me-2"></i> Agregar Circulación
                 </button>
@@ -160,6 +163,7 @@
                     <div class="mb-1">
                         <label class="form-label">Estado</label>
                         <select name="estado_vehiculo" class="form-select" required>
+                            <option value="">-- Selecciona el estado --</option>
                             <option value="1" <?= (isset($u_estado) && $u_estado == 1) ? 'selected' : '' ?>>Activo</option>
                             <option value="0" <?= (isset($u_estado) && $u_estado == 0) ? 'selected' : '' ?>>Inactivo</option>
                         </select>

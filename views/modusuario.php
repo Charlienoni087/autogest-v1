@@ -1,12 +1,13 @@
 <?php
-/** @var array $listaUsuarios */
+/** @var array $listaDeUsuarios */
 ?>
+
 <div class="row mb-4">
     <div class="col-12 d-flex justify-content-between align-items-center">
         <h4 class="mb-0"></h4>
         <div class="d-flex gap-2">
             <button type="button" class="btn btn-primary" style="background-color: #6d9773;" data-bs-toggle="modal" data-bs-target="#modalAgregarUsuario">
-                Agregar Usuario
+                <i class="bi bi-plus-lg me-2"></i>Agregar Usuario
             </button>
         </div>
     </div>
@@ -21,7 +22,6 @@
                     <thead class="table-light">
                         <tr>
                             
-                            <th>ID</th>
                             <th>Nombre de Usuario</th>
                             <th>Correo</th>
                             <th>Contraseña</th>
@@ -30,11 +30,9 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <?php if (isset($listaUsuarios) && count($listaUsuarios) > 0): ?>
-                            <?php foreach ($listaUsuarios as $usuario): ?>
+                        <?php if (isset($listaDeUsuarios) && count($listaDeUsuarios) > 0): ?>
+                            <?php foreach ($listaDeUsuarios as $usuario): ?>
                                 <tr>
-                                    
-                                    <td><?= htmlspecialchars($usuario['id_usuario'] ?? '') ?></td>
                                     
                                     <td><?= htmlspecialchars($usuario['nombre_usuario'] ?? '') ?></td>
                                     <td><?= htmlspecialchars($usuario['correo'] ?? '') ?></td>
@@ -90,6 +88,7 @@
             </div>
             <div class="modal-body">
                 <form action="main.php?page=usuarios" method="POST">
+                    <input type="hidden" name="accion" value="guardar">
                     <input type="hidden" name="id_usuario" value="<?= htmlspecialchars($u_id) ?>">
                     
                     <div class="mb-3">
@@ -131,7 +130,7 @@
 </div>
 
 <!-- Modal de confirmación para eliminar -->
-<?php foreach ($listaUsuarios as $usuario): ?>
+<?php foreach ($listaDeUsuarios as $usuario): ?>
 <div class="modal fade" id="modalEliminarUsuario<?= $usuario['id_usuario'] ?>" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -146,7 +145,7 @@
             </div>
             <div class="modal-footer justify-content-center">
                 <button type="button" class="btn btn-secondary px-4" data-bs-dismiss="modal">Cancelar</button>
-                <a href="main.php?page=usuarios&eliminar_usuario=<?= $usuario['id_usuario'] ?>" class="btn btn-danger px-4">Sí, eliminar</a>
+                <a href="main.php?page=usuarios&accion=eliminar&eliminar_usuario=<?= $usuario['id_usuario'] ?>" class="btn btn-danger px-4">Sí, eliminar</a>
             </div>
         </div>
     </div>

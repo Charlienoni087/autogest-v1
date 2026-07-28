@@ -8,7 +8,16 @@ $categorias_guardadas = !empty($u_categorias) ? explode(',', $u_categorias) : []
             <h4 class="mb-0"></h4>
             <div class="d-flex gap-2">
                 <button type="button" class="btn btn-primary" style="background-color: #6d9773;" data-bs-toggle="modal" data-bs-target="#modalAgregarConductor">
-                    Agregar Conductor
+                    <i class="bi bi-plus-lg me-2"></i>Agregar Conductor
+                </button>
+
+                <button type="button" class="btn btn-primary" style="background-color: #6d9773;" data-bs-toggle="modal" data-bs-target="#modalAgregarLicencia">
+                    <i class="bi bi-plus-lg me-2"></i>Agregar Licencia
+                </button>
+
+                <button type="button" class="btn btn-primary" style="background-color: #0c3b2e;"data-bs-toggle="modal" data-bs-target="#modalListaLicencias">
+            
+                    <i class="bi bi-list-ul me-2"></i> Lista de Licencias
                 </button>
             </div>
         </div>
@@ -82,71 +91,11 @@ $categorias_guardadas = !empty($u_categorias) ? explode(',', $u_categorias) : []
 
     <br>
     <br>
-    <div class="row mb-4">
-        <div class="col-12 d-flex justify-content-between align-items-center">
-            <h4 class="mb-0">Licencias</h4>
-            <div class="d-flex gap-2">
-                <button type="button" class="btn btn-primary" style="background-color: #6d9773;" data-bs-toggle="modal" data-bs-target="#modalAgregarLicencia">
-                    Agregar Licencia
-                </button>
-            </div>
-        </div>
-    </div>
+    
 
     <div class="row">
         <div class="col-md-16">
-            <div class="card shadow-sm">
-                <div class="card-header bg text-white" style="background-color: #0c3b2e;">Licencias de Conducir Registradas</div>
-                <div class="card-body table-responsive">
-                    <table class="table table-hover align-middle">
-                        <thead class="table-light">
-                            <tr>
-                                <th>N° Licencia</th>
-                                <th>Tipo</th>
-                                <th>Categorías</th>
-                                <th>Vencimiento</th>
-                                <th class="text-center">Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php if (isset($listaLicencias) && is_array($listaLicencias) && count($listaLicencias) > 0): ?>
-                                <?php foreach ($listaLicencias as $licencia): ?>
-                                    <tr>
-                                       
-                                        <td><?= htmlspecialchars($licencia['numero_licencia']) ?></td>
-                                        <td><?= htmlspecialchars($licencia['tipo_licencia']) ?></td>
-                                        <td><?= htmlspecialchars($licencia['categorias']) ?></td>
-                                        <td><?= htmlspecialchars($licencia['fecha_vencimiento']) ?></td>
-
-                                        <td class="text-center">
-                                        <div class="btn-group btn-group-sm">
-                                            <a href="main.php?page=conductores&editar_licencia=<?= $licencia['id_licencia'] ?>"
-                                            class="btn btn-outline-dark" 
-                                            title="Editar">
-                                                <i class="bi bi-pencil-square"></i> Editar
-                                            </a>
-
-                                            <a href="main.php?page=conductores&eliminar_licencia=<?= $licencia['id_licencia'] ?>" 
-                                            class="btn btn-outline-danger" 
-                                            data-bs-target="#modalAgregarLicencia" 
-                                            onclick="return confirm('¿Estás seguro de que deseas eliminar esta licencia?');" 
-                                            title="Eliminar">
-                                                <i class="bi bi-trash3"></i> Borrar
-                                            </a>
-                                        </div>
-                                        </td>
-                                    </tr>
-                                <?php endforeach; ?>
-                            <?php else: ?>
-                                <tr>
-                                    <td colspan="5" class="text-center text-muted">No hay licencias registradas o no se pudieron cargar los datos.</td>
-                                </tr>
-                            <?php endif; ?>
-                                            
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+            
         </div>
     </div>
 
@@ -298,6 +247,74 @@ $categorias_guardadas = !empty($u_categorias) ? explode(',', $u_categorias) : []
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                         </div>
                     </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--Modal para la lista de licencias-->
+    <div class="modal fade" id="modalListaLicencias" tabindex="-1" aria-labelledby="modalListaLicenciasLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg text-white" style="background-color: #0c3b2e;">
+                    <h5 class="modal-title" id="modalListaLicenciasLabel">Licencias registradas</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="card shadow-sm">
+                <div class="card-header bg text-white" style="background-color: #0c3b2e;">Registros de Licencias</div>
+                <div class="card-body table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>N° Licencia</th>
+                                <th>Tipo</th>
+                                <th>Categorías</th>
+                                <th>Vencimiento</th>
+                                <th class="text-center">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php if (isset($listaLicencias) && is_array($listaLicencias) && count($listaLicencias) > 0): ?>
+                                <?php foreach ($listaLicencias as $licencia): ?>
+                                    <tr>
+                                       
+                                        <td><?= htmlspecialchars($licencia['numero_licencia']) ?></td>
+                                        <td><?= htmlspecialchars($licencia['tipo_licencia']) ?></td>
+                                        <td><?= htmlspecialchars($licencia['categorias']) ?></td>
+                                        <td><?= htmlspecialchars($licencia['fecha_vencimiento']) ?></td>
+
+                                        <td class="text-center">
+                                        <div class="btn-group btn-group-sm">
+                                            <a href="main.php?page=conductores&editar_licencia=<?= $licencia['id_licencia'] ?>"
+                                            class="btn btn-outline-dark" 
+                                            title="Editar">
+                                                <i class="bi bi-pencil-square"></i> Editar
+                                            </a>
+
+                                            <a href="main.php?page=conductores&eliminar_licencia=<?= $licencia['id_licencia'] ?>" 
+                                            class="btn btn-outline-danger" 
+                                            data-bs-target="#modalListaLicencias" 
+                                            onclick="return confirm('¿Estás seguro de que deseas eliminar esta licencia?');" 
+                                            title="Eliminar">
+                                                <i class="bi bi-trash3"></i> Borrar
+                                            </a>
+                                        </div>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            <?php else: ?>
+                                <tr>
+                                    <td colspan="5" class="text-center text-muted">No hay licencias registradas o no se pudieron cargar los datos.</td>
+                                </tr>
+                            <?php endif; ?>
+                                            
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+                    
+                
                 </div>
             </div>
         </div>

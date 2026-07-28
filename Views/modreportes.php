@@ -34,7 +34,7 @@ $query_filtros = http_build_query([
         <!-- COLUMNA DEL FORMULARIO -->
         <div class="col-md-4 mb-4">
             <div class="card shadow-sm border-0">
-                <div class="card-header <?= $en_modo_edicion ? 'bg-warning text-dark' : 'bg-primary text-white' ?> fw-bold">
+                <div class="card-header <?= $en_modo_edicion ? 'bg-warning text-dark' : 'bg text-white' ?>fw-bold" style="background-color: #0c3b2e; color: white;">
                     <?= $en_modo_edicion ? 'Modificar Reporte ID: ' . htmlspecialchars($r_id) : 'Registrar Nuevo Reporte' ?>
                 </div>
                 <div class="card-body">
@@ -80,7 +80,7 @@ $query_filtros = http_build_query([
                             <button type="submit" name="actualizar_reporte" class="btn btn-warning w-100 fw-bold mb-2">Actualizar Reporte</button>
                             <a href="main.php?page=reportes" class="btn btn-outline-secondary w-100">Cancelar Edición</a>
                         <?php else: ?>
-                            <button type="submit" name="guardar_reporte" class="btn btn-primary w-100">Guardar Reporte</button>
+                            <button type="submit" name="guardar_reporte" class="btn btn w-100" style="background-color: #0c3b2e; color: white;" >Guardar Reporte</button>
                         <?php endif; ?>
                     </form>
                 </div>
@@ -127,10 +127,10 @@ $query_filtros = http_build_query([
                             </select>
                         </div>
                         <div class="col-12 mt-2">
-                            <button type="submit" class="btn btn-sm btn-primary">🔍 Filtrar</button>
+                            <button type="submit" class="btn btn-sm btn-primary">Filtrar</button>
                             <a href="main.php?page=reportes" class="btn btn-sm btn-outline-secondary">Limpiar</a>
-                            <a href="/AUTOGEST/Controllers/ExportarReportesController.php?formato=excel&<?= $query_filtros ?>" class="btn btn-sm btn-success float-end ms-2">📊 Exportar Excel</a>
-                            <a href="/AUTOGEST/Controllers/ExportarReportesController.php?formato=pdf&<?= $query_filtros ?>" target="_blank" class="btn btn-sm btn-danger float-end">📄 Exportar PDF</a>
+                            <a href="/AUTOGEST/Controllers/ExportarReportesController.php?formato=excel&<?= $query_filtros ?>" class="btn btn-sm btn-success float-end ms-2"><i class="bi bi-file-earmark-text-fill"></i>Exportar Excel</a>
+                            <a href="/AUTOGEST/Controllers/ExportarReportesController.php?formato=pdf&<?= $query_filtros ?>" target="_blank" class="btn btn-sm btn-danger float-end"><i class="bi bi-file-earmark-text-fill"></i>Exportar PDF</a>
                         </div>
                     </form>
                 </div>
@@ -143,7 +143,6 @@ $query_filtros = http_build_query([
                     <table class="table table-hover align-middle">
                         <thead class="table-light">
                             <tr>
-                                <th>ID</th>
                                 <th>Fecha</th>
                                 <th>H. Entrada</th>
                                 <th>H. Salida</th>
@@ -157,7 +156,6 @@ $query_filtros = http_build_query([
                             <?php if (!empty($listaReportes)): ?>
                                 <?php foreach ($listaReportes as $row): ?>
                                 <tr>
-                                    <td><?= $row['id_reporte'] ?></td>
                                     <td><?= htmlspecialchars($row['fecha']) ?></td>
                                     <td><?= htmlspecialchars($row['hora_entrada']) ?></td>
                                     <td><?= htmlspecialchars($row['hora_salida']) ?></td>

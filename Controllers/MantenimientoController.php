@@ -1,25 +1,25 @@
 <?php
 require_once __DIR__ . '/../Config/conexion.php';
-require_once __DIR__ . '/../models/mantenimiento.php';
-require_once __DIR__ . '/../models/vehiculo.php'; 
+require_once __DIR__ . '/../Models/mantenimiento.php';
+require_once __DIR__ . '/../Models/vehiculo.php';
 
 class MantenimientoController {
     private $db;
     private $modelo;
-    private $modeloVehiculo; 
+    private $modeloVehiculo;
 
     public function __construct() {
-        global $conexion; 
+        global $conexion;
         $this->db = $conexion;
         $this->modelo = new MantenimientoModel($this->db);
-        $this->modeloVehiculo = new Vehiculo($this->db); 
+        $this->modeloVehiculo = new Vehiculo($this->db);
     }
 
     public function index() {
         $tituloModulo = "Módulo de Mantenimiento";
         $listaMantenimientos = $this->modelo->obtenerMantenimientos();
-        $listaVehiculos = $this->modeloVehiculo->obtenerVehiculos(); 
-        
+        $listaVehiculos = $this->modeloVehiculo->obtenerVehiculos();
+
         require_once __DIR__ . '/../Views/modMantenimiento.php';
     }
 
@@ -36,15 +36,13 @@ class MantenimientoController {
 
             if ($id_vehiculo && $fecha_mantenimiento && $descripcion) {
                 if (!empty($id_mantenimiento)) {
-                    // Sirve para actualizar el registro existente
                     $this->modelo->actualizarMantenimiento($id_mantenimiento, $id_vehiculo, $fecha_mantenimiento, $fecha_salida, $descripcion, $costo, $estado);
                 } else {
-                    // Si no se viene un id_mantenimiento se sume que es un nuevo registro
                     $this->modelo->insertarMantenimiento($id_vehiculo, $fecha_mantenimiento, $fecha_salida, $descripcion, $costo, $estado);
                 }
             }
 
-            header("Location: ../Views/main.php?page=mantenimiento");
+            header("Location: /AutoGest/Views/main.php?page=mantenimiento");
             exit();
         }
     }
@@ -54,7 +52,7 @@ class MantenimientoController {
         if ($id) {
             $this->modelo->eliminarMantenimiento($id);
         }
-        header("Location: ../Views/main.php?page=mantenimiento");
+        header("Location: /AutoGest/Views/main.php?page=mantenimiento");
         exit();
     }
 }

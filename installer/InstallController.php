@@ -6,7 +6,7 @@ $nombre = trim($_POST["nombre"]);
 $correo = trim($_POST["correo"]);
 $password = $_POST["password"];
 
-$rol = "Administrador";
+$rol = "SuperAdmin";
 
 $password = password_hash($password, PASSWORD_DEFAULT);
 
