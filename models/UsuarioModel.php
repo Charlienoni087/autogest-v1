@@ -13,24 +13,7 @@ class UsuarioModel {
         $this->db = $conexion;
     }
 
-    public function autenticar(string $usuario, string $password): ?array {
-        // Corregidos los nombres de columnas para que coincidan con tu BD
-        $query = "SELECT id_usuario, nombre_usuario, contrasena, rol FROM usuarios WHERE nombre_usuario = ?";
-        $stmt = $this->db->prepare($query);
-        $stmt->bind_param("s", $usuario);
-        $stmt->execute();
-        
-        $resultado = $stmt->get_result();
 
-        if ($fila = $resultado->fetch_assoc()) {
-            // Soporta hash de contraseña o texto plano
-            if (password_verify($password, $fila['contrasena']) || $password === $fila['contrasena']) {
-                return $fila;
-            }
-        }
-        
-        return null;
-    }
 
     // Método que requiere UsuarioController.php
     public function obtenerUsuarios(): array {
@@ -66,12 +49,34 @@ class UsuarioModel {
     }
 
     // Agregar Usuario
-    public function crear(string $nombre, string $correo, string $contrasena, string $rol): bool {
+public function crear(string $nombre, string $correo, string $contrasena, string $rol): bool {
+        // 1. Comprobar si el correo ya existe en la base de datos
+        $checkSql = "SELECT id_usuario FROM usuarios WHERE correo = ?";
+        $checkStmt = $this->db->prepare($checkSql);
+        
+        if (!$checkStmt) {
+            die("Error prepare en validación: " . $this->db->error);
+        }
+        
+        $checkStmt->bind_param("s", $correo);
+        $checkStmt->execute();
+        $checkStmt->store_result(); // Necesario para contar las filas
+        
+        // Si num_rows es mayor a 0, el correo ya está registrado
+        if ($checkStmt->num_rows > 0) {
+            $checkStmt->close();
+            // Puedes retornar false o lanzar una excepción, dependiendo de cómo manejes los errores
+            // throw new Exception("El correo ingresado ya está en uso.");
+            return false; 
+        }
+        $checkStmt->close();
+
+        // 2. Si el correo no existe, procedemos con la inserción
         $sql = "INSERT INTO usuarios (nombre_usuario, correo, contrasena, rol) VALUES (?, ?, ?, ?)";
         $stmt = $this->db->prepare($sql);
         
         if (!$stmt) {
-            die("Error prepare: " . $this->db->error);
+            die("Error prepare en inserción: " . $this->db->error);
         }
 
         $passHash = password_hash($contrasena, PASSWORD_DEFAULT); 
