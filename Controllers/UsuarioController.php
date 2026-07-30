@@ -1,4 +1,9 @@
 <?php
+// Asegurarnos de que la sesión esté iniciada para poder usar mensajes flash
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
 require_once __DIR__ . '/../Config/conexion.php';
 require_once __DIR__ . '/../Models/UsuarioModel.php';
 
@@ -46,10 +51,25 @@ class UsuarioController {
             $contrasena = trim($_POST['contrasena'] ?? '');
             $rol = trim($_POST['rol'] ?? '');
 
+            if (!preg_match('/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/', $correo)) {
+                    $_SESSION['mensaje_error'] = "El formato del correo es inválido. Asegúrate de incluir la terminación (ej. .com).";
+                    header("Location: /AutoGest/Views/main.php?page=usuarios");
+                    exit();
+                }
+
+
+            $operacionExitosa = false;
+
             if ($id > 0) {
-                $this->modelo->actualizar($id, $nombre, $correo, $contrasena, $rol);
+                $operacionExitosa = $this->modelo->actualizar($id, $nombre, $correo, $contrasena, $rol);
             } else {
-                $this->modelo->crear($nombre, $correo, $contrasena, $rol);
+                $operacionExitosa = $this->modelo->crear($nombre, $correo, $contrasena, $rol);
+            }
+
+            if ($operacionExitosa) {
+                $_SESSION['mensaje_exito'] = "Usuario guardado correctamente.";
+            } else {
+                $_SESSION['mensaje_error'] = "No se pudo guardar. Es probable que el correo ingresado ya esté en uso.";
             }
 
             header("Location: /AutoGest/Views/main.php?page=usuarios");
@@ -60,7 +80,12 @@ class UsuarioController {
     public function eliminar() {
         if (isset($_GET['eliminar_usuario'])) {
             $id = intval($_GET['eliminar_usuario']);
-            $this->modelo->eliminar($id);
+            
+            if ($this->modelo->eliminar($id)) {
+                $_SESSION['mensaje_exito'] = "Usuario eliminado correctamente.";
+            } else {
+                $_SESSION['mensaje_error'] = "Error al intentar eliminar el usuario.";
+            }
         }
 
         header("Location: /AutoGest/Views/main.php?page=usuarios");

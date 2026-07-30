@@ -46,7 +46,7 @@ unset($_SESSION['login_error']);
                 <div class="brand-subtitle"></div>
                 
                 <div class="">
-                   
+                
                     <p></p>
                 </div>
             </div>
@@ -54,7 +54,7 @@ unset($_SESSION['login_error']);
 
         <!-- SECCIÓN DERECHA: Formulario -->
         <div class="form-section">
-          
+        
 
             <div class="login-card text-center">
             
@@ -71,12 +71,12 @@ unset($_SESSION['login_error']);
                 <!-- Para una ventana que te dice que si quieres volver al  Formulario -->
                 <form action="Controllers/LoginController.php" method="POST" autocomplete="off">
                     
-                    <!-- Campo Usuario -->
+                    <!-- Campo Correo -->
                     <div class="text-start mb-3">
-                        <label for="username" class="form-label">Usuario</label>
+                        <label for="username" class="form-label">Correo Electronico</label>
                         <div class="input-group-custom">
                             <i class="fa-regular fa-user input-icon"></i>
-                            <input type="text" id="username" name="nombre_usuario" class="form-control-custom" placeholder="Ingresa tu usuario" required>
+                            <input type="text" id="username" name="correo" class="form-control-custom" placeholder="Ingresa tu correo" required>
                         </div>
                     </div>
                     

@@ -1,10 +1,26 @@
-
 <?php
-// Datos de prueba 
-$totalVehiculos = 5;
-$conductoresActivos = 7;
-$totalLicencias = 9;
-$totalReportes = 2;
+
+include ("../Config/conexion.php");
+
+$sql = "SELECT COUNT(*) AS total FROM Vehiculos";
+$resul = $conexion->query($sql);
+$totalVehiculos = $resul->fetch_assoc()['total'];
+
+
+$sql = "SELECT COUNT(*) AS total FROM Conductores WHERE estado = 1";
+$result = $conexion->query($sql);
+$conductoresActivos = $result->fetch_assoc()['total'];
+
+
+$sql = "SELECT COUNT(*) AS total FROM Licencia";
+$res = $conexion->query($sql);
+$totalLicencias = $res->fetch_assoc()['total'];
+
+
+$sql = "SELECT COUNT(*) AS total FROM Reportes";
+$resultado = $conexion->query($sql);
+$totalReportes = $resultado->fetch_assoc()['total'];
+
 ?>
 
 <!-- Contenedor del Dashboard  -->
@@ -16,7 +32,7 @@ $totalReportes = 2;
     <!-- Fichas de Resumen (Cards) adaptadas a tus nuevos módulos -->
     <div class="row g-3 mb-4">
         <!-- Tarjeta 1: Vehículos -->
-        <div class="col-12 col-sm-6 col-xl-3">
+        <div class="col-12 col-sm-6 col-xl-3" id="tarjeta1">
             <div class="card text-white h-100" style="background-color: #0c3d2e; border: none;">
                 <div class="card-body d-flex flex-column justify-content-center align-items-center p-4">
                     <h5 class="card-title text-center font-weight-bold mb-2">Total Vehículos</h5>
@@ -25,7 +41,7 @@ $totalReportes = 2;
             </div>
         </div>
         <!-- Tarjeta 2: Conductores -->
-        <div class="col-12 col-sm-6 col-xl-3">
+        <div class="col-12 col-sm-6 col-xl-3" id="tarjeta2">
             <div class="card text-white h-100" style="background-color:  #0c3d2e; border: none;">
                 <div class="card-body d-flex flex-column justify-content-center align-items-center p-4">
                     <h5 class="card-title text-center font-weight-bold mb-2">Conductores Activos</h5>
@@ -34,7 +50,7 @@ $totalReportes = 2;
             </div>
         </div>
         <!-- Tarjeta 3: Licencias -->
-        <div class="col-12 col-sm-6 col-xl-3">
+        <div class="col-12 col-sm-6 col-xl-3" id="tarjeta3">
             <div class="card text-white h-100" style="background-color: #0c3d2e; border: none;">
                 <div class="card-body d-flex flex-column justify-content-center align-items-center p-4">
                     <h5 class="card-title text-center font-weight-bold mb-2">Licencias Emitidas</h5>
@@ -43,7 +59,7 @@ $totalReportes = 2;
             </div>
         </div>
         <!-- Tarjeta 4: Reportes -->
-        <div class="col-12 col-sm-6 col-xl-3">
+        <div class="col-12 col-sm-6 col-xl-3" id="tarjeta4">
             <div class="card text-white h-100" style="background-color: #0c3d2e; border: none;">
                 <div class="card-body d-flex flex-column justify-content-center align-items-center p-4">
                     <h5 class="card-title text-center font-weight-bold mb-2">Reportes Totales</h5>
@@ -54,7 +70,7 @@ $totalReportes = 2;
     </div>
 
     <!-- Sección de Gráfico -->
-    <div class="row mb-4">
+    <div class="row mb-4" id="grafico">
         <div class="col-12">
             <div class="card shadow-sm p-3 bg-white rounded">
                 <div class="card-body">
@@ -68,10 +84,10 @@ $totalReportes = 2;
     </div>
 
     <!-- Sección Inferior: Historial Reciente de Reportes / Vehículos en estado Crítico -->
-    <div class="row g-4">
+    <div class="row g-4" id="movimiento">
         <!-- Tabla de Últimos Movimientos -->
         <div class="col-12 col-lg-8">
-            <div class="card shadow-sm p-3 bg-white rounded h-100">
+            <div class="card shadow-sm p-3 bg-white rounded h-100" >
                 <div class="card-body">
                     <h5 class="card-title mb-3" style="color: #ffba00; font-weight: bold;">Últimos Reportes de Circulación</h5>
                     <div class="table-responsive">
@@ -112,7 +128,7 @@ $totalReportes = 2;
         </div>
 
         <!-- Alertas / Estado de Vehículos -->
-        <div class="col-12 col-lg-4">
+        <div class="col-12 col-lg-4" id="estado">
             <div class="card shadow-sm p-3 bg-white rounded h-100">
                 <div class="card-body">
                     <h5 class="card-title mb-3" style="color: #0c3d2e; font-weight: bold;">Estatus de Vehículos</h5>
@@ -172,5 +188,3 @@ $totalReportes = 2;
         }
     });
 </script>
-
-
