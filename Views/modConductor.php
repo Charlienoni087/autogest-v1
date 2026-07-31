@@ -2,6 +2,7 @@
 /** @var array $listaConductores */
 /** @var array $listaLicencias */
 $categorias_guardadas = !empty($u_categorias) ? explode(',', $u_categorias) : [];
+$fechaActual = date('Y-m-d');
 ?>
 <div class="row mb-4">
         <div class="col-12 d-flex justify-content-between align-items-center">
@@ -152,8 +153,11 @@ $categorias_guardadas = !empty($u_categorias) ? explode(',', $u_categorias) : []
                             <label class="form-label">Licencia</label>
                             <select name="id_licencia" class="form-select" required>
                                 <?php foreach ($listaLicencias as $licencia): ?>
-                                    <option value="<?= $licencia['id_licencia'] ?>" <?= $u_id_licencia == $licencia['id_licencia'] ? 'selected' : '' ?>>
-                                        <?= htmlspecialchars($licencia['numero_licencia']) ?>
+                                    <?php $vencida = strtotime($licencia['fecha_vencimiento']) < strtotime($fechaActual); ?>
+                                    <option value="<?= $licencia['id_licencia'] ?>" 
+                                        <?= $vencida ? 'disabled' : '' ?>
+                                        <?= $u_id_licencia == $licencia['id_licencia'] ? 'selected' : '' ?>>
+                                        <?= htmlspecialchars($licencia['numero_licencia']) ?><?= $vencida ? '      ⚠️LICENCIA VENCIDA': '' ?>
                                     </option>
                                 <?php endforeach; ?>
                             </select>
@@ -271,18 +275,28 @@ $categorias_guardadas = !empty($u_categorias) ? explode(',', $u_categorias) : []
                                 <th>Tipo</th>
                                 <th>Categorías</th>
                                 <th>Vencimiento</th>
+                                <th>Estado</th>
                                 <th class="text-center">Acciones</th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php if (isset($listaLicencias) && is_array($listaLicencias) && count($listaLicencias) > 0): ?>
                                 <?php foreach ($listaLicencias as $licencia): ?>
+                                    <?php $vencida = strtotime($licencia['fecha_vencimiento']) < strtotime($fechaActual); ?>
                                     <tr>
                                        
                                         <td><?= htmlspecialchars($licencia['numero_licencia']) ?></td>
                                         <td><?= htmlspecialchars($licencia['tipo_licencia']) ?></td>
                                         <td><?= htmlspecialchars($licencia['categorias']) ?></td>
                                         <td><?= htmlspecialchars($licencia['fecha_vencimiento']) ?></td>
+                                        <td>
+                                            <!--Validacion de que si la licencia esta vencida o no-->
+                                            <?php if($vencida): ?>
+                                                <span class="badge bg-danger ms-1">Vencida</span>
+                                            <?php else: ?>
+                                                <span class="badge bg-success ms-1">Vigente</span>
+                                            <?php endif; ?>
+                                        </td>
 
                                         <td class="text-center">
                                         <div class="btn-group btn-group-sm">

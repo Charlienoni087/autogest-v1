@@ -84,6 +84,7 @@ if (isset($_GET['eliminar_conductor'])) {
 
 $listaConductores = $modeloConductor->obtenerTodos();
 $listaLicencias = $modeloLicencia->obtenerTodas();
+$licenciasVencidas = $modeloLicencia->obtenerLicenciasVencidas();
 
 // Metodo para crear licencias
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['guardar_licencia'])) {
