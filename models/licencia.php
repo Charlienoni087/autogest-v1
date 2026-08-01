@@ -37,6 +37,15 @@ class Licencia {
         return $stmt->execute();
     }
 
+    //XD
+    public function obtenerLicenciasVencidas() {
+        $sql = "SELECT id_licencia, numero_licencia, tipo_licencia, categorias, fecha_vencimiento FROM Licencia
+        WHERE fecha_vencimiento < CURDATE()
+        ORDER BY fecha_vencimiento ASC";
+        $resultado = $this->db->query($sql);
+        return $resultado->fetch_all(MYSQLI_ASSOC);
+    }
+
     public function actualizar(int $id_licencia, string $numero_licencia, string $tipo_licencia, string $categorias, string $fecha_vencimiento) {
         $sql = "UPDATE Licencia 
                 SET numero_licencia = ?, tipo_licencia = ?, categorias = ?, fecha_vencimiento = ? 

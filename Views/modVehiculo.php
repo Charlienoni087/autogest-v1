@@ -5,6 +5,7 @@
 $circulaciones = $circulaciones??[];
 $en_modo_edicion = $en_modo_edicion??[];
 $en_modo_edicion_circulacion = $en_modo_edicion_circulacion??[];
+$fechaActual = date('Y-m-d');
 ?>
 
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -185,8 +186,11 @@ $en_modo_edicion_circulacion = $en_modo_edicion_circulacion??[];
                             <option value="">-- Selecciona un conductor --</option>
                             <?php if (isset($conductores) && count($conductores) > 0): ?>
                                 <?php foreach ($conductores as $c): ?>
-                                    <option value="<?= $c['id_conductor'] ?>" <?= (isset($u_id_conductor) && $u_id_conductor == $c['id_conductor']) ? 'selected' : '' ?>>
-                                        <?= htmlspecialchars($c['nombre_conductor']) ?>
+                                    <?php $vencida = !empty($c['fecha_vencimiento']) && strtotime($c['fecha_vencimiento']) < strtotime(date('Y-m-d')); ?> 
+                                    <option value="<?= $c['id_conductor'] ?>"
+                                        <?= $vencida ? 'disabled' : '' ?>
+                                        <?= (isset($u_id_conductor) && $u_id_conductor == $c['id_conductor']) ? 'selected' : '' ?>>
+                                        <?= htmlspecialchars($c['nombre_conductor']) ?><?= $vencida ? '        ⚠️ESTE CONDUCTOR TIENE LA LICENCIA VENCIDA, NO SE PUEDE ASIGNAR' : '' ?>
                                     </option>
                                 <?php endforeach; ?>
                             <?php else: ?>
