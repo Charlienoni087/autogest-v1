@@ -2,6 +2,7 @@
 /** @var array $listaConductores */
 /** @var array $listaLicencias */
 $categorias_guardadas = !empty($u_categorias) ? explode(',', $u_categorias) : [];
+//ESTA MADRE TOMA LAS FECHAS DE HOY PARA COMPARARLAS CON LAS FECHAS DE VENCIMIENTO DE LAS LICENCIAS
 $fechaActual = date('Y-m-d');
 ?>
 <div class="row mb-4">

@@ -1,7 +1,7 @@
 <?php
 
 include ("../Config/conexion.php");
-
+//SUBANSE ALAGRANP
 $sql = "SELECT COUNT(*) AS total FROM Vehiculos";
 $resul = $conexion->query($sql);
 $totalVehiculos = $resul->fetch_assoc()['total'];

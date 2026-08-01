@@ -37,6 +37,7 @@ class Licencia {
         return $stmt->execute();
     }
 
+    //XD
     public function obtenerLicenciasVencidas() {
         $sql = "SELECT id_licencia, numero_licencia, tipo_licencia, categorias, fecha_vencimiento FROM Licencia
         WHERE fecha_vencimiento < CURDATE()
