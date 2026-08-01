@@ -2,6 +2,23 @@
 /** @var array $listaDeUsuarios */
 ?>
 
+<?php if (isset($_SESSION['mensaje_error'])): ?>
+    <div class="alert alert-danger alert-dismissible fade show shadow-sm" role="alert">
+        <strong>Correo electrónico inválido</strong><br>
+        <span>Correo ya existente.</span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+    </div>
+    <?php unset($_SESSION['mensaje_error']); ?>
+<?php endif; ?>
+
+<?php if (isset($_SESSION['mensaje_exito'])): ?>
+    <div class="alert alert-success alert-dismissible fade show shadow-sm" role="alert">
+        <?= htmlspecialchars($_SESSION['mensaje_exito']) ?>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+    </div>
+    <?php unset($_SESSION['mensaje_exito']); ?>
+<?php endif; ?>
+
 <div class="row mb-4">
     <div class="col-12 d-flex justify-content-between align-items-center">
         <h4 class="mb-0"></h4>
@@ -98,7 +115,11 @@
 
                     <div class="mb-3">
                         <label class="form-label">Correo Electrónico</label>
-                        <input type="email" name="correo" class="form-control" required value="<?= htmlspecialchars($u_correo ?? '') ?>">
+                        <input type="email" name="correo" class="form-control" required 
+                            pattern="[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$" 
+                            title="El correo debe incluir un dominio válido, por ejemplo: usuario@gmail.com" 
+                            value="<?= htmlspecialchars($u_correo ?? '') ?>">            
+                
                     </div>
 
                     <div class="mb-3">
@@ -160,4 +181,17 @@ document.addEventListener('DOMContentLoaded', function () {
     modal.show();
 });
 </script>
+
 <?php endif; ?>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    let alertas = document.querySelectorAll('.alert');
+    alertas.forEach(function (alerta) {
+        setTimeout(function () {
+            let bsAlert = new bootstrap.Alert(alerta);
+            bsAlert.close();
+        }, 3000);
+    });
+});
+</script>

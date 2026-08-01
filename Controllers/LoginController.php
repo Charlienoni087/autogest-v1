@@ -10,17 +10,19 @@ if ($_SERVER["REQUEST_METHOD"] !== "POST") {
     exit;
 }
 
-$user = trim($_POST['nombre_usuario'] ?? '');
+$correo = trim($_POST['correo'] ?? '');
 $pass = trim($_POST['contrasena'] ?? '');
 
-if ($user === '' || $pass === '') {
-    $_SESSION['login_error'] = "Debes completar usuario y contraseña.";
+if ($correo === '' || $pass === '') {
+    $_SESSION['login_error'] = "Debes completar correo y contraseña.";
     header("Location: /AutoGest/index.php");
     exit;
 }
 
-$stmt = $conexion->prepare("SELECT id_usuario, nombre_usuario, contrasena, rol FROM usuarios WHERE nombre_usuario = ?");
-$stmt->bind_param("s", $user);
+
+
+$stmt = $conexion->prepare("SELECT id_usuario, nombre_usuario, correo, contrasena, rol FROM usuarios WHERE correo = ?");
+$stmt->bind_param("s", $correo);
 $stmt->execute();
 $result = $stmt->get_result();
 
@@ -39,6 +41,7 @@ if ($result && $row = $result->fetch_assoc()) {
         session_regenerate_id(true);
         $_SESSION['id_usuario'] = (int) $row['id_usuario'];
         $_SESSION['nombre_usuario'] = htmlspecialchars($row['nombre_usuario'], ENT_QUOTES, 'UTF-8');
+        $_SESSION['correo'] = htmlspecialchars($row['correo'], ENT_QUOTES, 'UTF-8');
         $_SESSION['rol'] = $row['rol'];
         $_SESSION['login_exitoso'] = true;
         unset($_SESSION['login_error']);
@@ -48,6 +51,6 @@ if ($result && $row = $result->fetch_assoc()) {
     }
 }
 
-$_SESSION['login_error'] = "Usuario o contraseña incorrectos.";
+$_SESSION['login_error'] = "Correo o contraseña incorrectos.";
 header("Location: /AutoGest/index.php");
 exit;
