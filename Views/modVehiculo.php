@@ -143,32 +143,32 @@ $modelolicencia = $modeloLicencia??[];
                         <div class="col-md-6">
                             <div class="mb-1">
                                 <label class="form-label">Marca</label>
-                                <input type="text" name="marca" class="form-control" required placeholder="ej. Toyota" value="<?= htmlspecialchars($u_marca ?? '') ?>">
+                                <input type="text" name="marca" class="form-control" required placeholder="" value="<?= htmlspecialchars($u_marca ?? '') ?>">
                             </div>
 
                             <div class="mb-1">
                                 <label class="form-label">Modelo</label>
-                                <input type="text" name="modelo" class="form-control" required placeholder="ej. Hilux" value="<?= htmlspecialchars($u_modelo ?? '') ?>">
+                                <input type="text" name="modelo" class="form-control" required placeholder="" value="<?= htmlspecialchars($u_modelo ?? '') ?>">
                             </div>
 
                             <div class="mb-1">
                                 <label class="form-label">Color</label>
-                                <input type="text" name="color" class="form-control" required placeholder="ej. Blanco" value="<?= htmlspecialchars($u_color ?? '') ?>">
+                                <input type="text" name="color" class="form-control" required placeholder="" value="<?= htmlspecialchars($u_color ?? '') ?>">
                             </div>
 
                             <div class="mb-1">
                                 <label class="form-label">Chasis</label>
-                                <input type="text" name="chasis" class="form-control" required placeholder="ej. 1234567890" value="<?= htmlspecialchars($u_chasis ?? '') ?>">
+                                <input type="text" name="chasis" class="form-control" required placeholder="" value="<?= htmlspecialchars($u_chasis ?? '') ?>">
                             </div>
 
                             <div class="mb-1">
                                 <label class="form-label">Tipo de Vehículo</label>
-                                <input type="text" name="tipo_vehiculo" class="form-control" required placeholder="ej. Camioneta" value="<?= htmlspecialchars($u_tipo_vehiculo ?? '') ?>">
+                                <input type="text" name="tipo_vehiculo" class="form-control" required placeholder="" value="<?= htmlspecialchars($u_tipo_vehiculo ?? '') ?>">
                             </div>
 
                             <div class="mb-1">
                                 <label class="form-label">Combustible</label>
-                                <input type="text" name="combustible" class="form-control" required placeholder="ej. Gasolina" value="<?= htmlspecialchars($u_tipo_combustible ?? '') ?>">
+                                <input type="text" name="combustible" class="form-control" required placeholder="" value="<?= htmlspecialchars($u_tipo_combustible ?? '') ?>">
                             </div>
                         </div>
 
@@ -185,12 +185,12 @@ $modelolicencia = $modeloLicencia??[];
 
                             <div class="mb-1">
                                 <label class="form-label">N° Póliza</label>
-                                <input type="text" name="numero_poliza" class="form-control" required placeholder="ej. 1234567890" value="<?= htmlspecialchars($u_numero_poliza ?? '') ?>">
+                                <input type="text" name="numero_poliza" class="form-control" required placeholder="" value="<?= htmlspecialchars($u_numero_poliza ?? '') ?>">
                             </div>
 
                             <div class="mb-1">
                                 <label class="form-label">Gravamen</label>
-                                <input type="number" name="gravamen" class="form-control" required placeholder="ej. 1000" value="<?= htmlspecialchars($u_gravamen ?? '') ?>">
+                                <input type="string" name="gravamen" class="form-control" required placeholder="" value="<?= htmlspecialchars($u_gravamen ?? '') ?>">
                             </div>
 
                             <div class="mb-3">
