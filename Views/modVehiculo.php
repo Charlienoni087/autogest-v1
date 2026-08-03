@@ -2,10 +2,12 @@
 /** @var array $listaVehiculos */
 /** @var array $conductores */
 /** @var array $circulaciones */
+/** @var array $modeloLicencia */
 $circulaciones = $circulaciones??[];
 $en_modo_edicion = $en_modo_edicion??[];
 $en_modo_edicion_circulacion = $en_modo_edicion_circulacion??[];
 $fechaActual = date('Y-m-d');
+$modelolicencia = $modeloLicencia??[];
 ?>
 
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -118,104 +120,123 @@ $fechaActual = date('Y-m-d');
 
     <!--Modal para agregar vehiculos-->
 
-   <div class="modal fade" id="modalAgregarVehiculo" tabindex="-1" aria-labelledby="modalAgregarVehiculoLabel" aria-hidden="true">
+<div class="modal fade" id="modalAgregarVehiculo" tabindex="-1" aria-labelledby="modalAgregarVehiculoLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
-            <div class="modal-header modal-header-custom">
-                <h5 class="modal-title" id="modalAgregarVehiculoLabel">
+            <!-- Reducimos el padding del header -->
+            <div class="modal-header modal-header-custom py-2">
+                <h5 class="modal-title fs-6" id="modalAgregarVehiculoLabel">
                     <?= (isset($en_modo_edicion) && $en_modo_edicion) ? 'Editar vehículo' : 'Agregar un nuevo vehículo' ?>
                 </h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
             </div>
-            <div class="modal-body">
+            
+            <!-- Reducimos padding interno del body (py-2) -->
+            <div class="modal-body py-2">
                 <form action="main.php?page=vehiculos" method="POST">
                     <input type="hidden" name="id_vehiculo" value="<?= htmlspecialchars($u_id ?? '') ?>">
 
-                    <div class="mb-1">
-                        <label class="form-label">Marca</label>
-                        <input type="text" name="marca" class="form-control" required placeholder="ej. Toyota" value="<?= htmlspecialchars($u_marca ?? '') ?>">
-                    </div>
+                    <!-- g-2 reduce la separación vertical entre las filas del grid -->
+                    <div class="row g-2">
+                        
+                        <!-- PRIMERA COLUMNA (IZQUIERDA) -->
+                        <div class="col-md-6">
+                            <div class="mb-1">
+                                <label class="form-label">Marca</label>
+                                <input type="text" name="marca" class="form-control" required placeholder="" value="<?= htmlspecialchars($u_marca ?? '') ?>">
+                            </div>
 
-                    <div class="mb-1">
-                        <label class="form-label">Modelo</label>
-                        <input type="text" name="modelo" class="form-control" required placeholder="ej. Hilux" value="<?= htmlspecialchars($u_modelo ?? '') ?>">
-                    </div>
+                            <div class="mb-1">
+                                <label class="form-label">Modelo</label>
+                                <input type="text" name="modelo" class="form-control" required placeholder="" value="<?= htmlspecialchars($u_modelo ?? '') ?>">
+                            </div>
 
-                    <div class="mb-1">
-                        <label class="form-label">Color</label>
-                        <input type="text" name="color" class="form-control" required placeholder="ej. Blanco" value="<?= htmlspecialchars($u_color ?? '') ?>">
-                    </div>
+                            <div class="mb-1">
+                                <label class="form-label">Color</label>
+                                <input type="text" name="color" class="form-control" required placeholder="" value="<?= htmlspecialchars($u_color ?? '') ?>">
+                            </div>
 
-                    <div class="mb-1">
-                        <label class="form-label">Chasis</label>
-                        <input type="text" name="chasis" class="form-control" required placeholder="ej. 1234567890" value="<?= htmlspecialchars($u_chasis ?? '') ?>">
-                    </div>
+                            <div class="mb-1">
+                                <label class="form-label">Chasis</label>
+                                <input type="text" name="chasis" class="form-control" required placeholder="" value="<?= htmlspecialchars($u_chasis ?? '') ?>">
+                            </div>
 
-                    <div class="mb-1">
-                        <label class="form-label">Tipo de Vehículo</label>
-                        <input type="text" name="tipo_vehiculo" class="form-control" required placeholder="ej. Camioneta" value="<?= htmlspecialchars($u_tipo_vehiculo ?? '') ?>">
-                    </div>
+                            <div class="mb-1">
+                                <label class="form-label">Tipo de Vehículo</label>
+                                <input type="text" name="tipo_vehiculo" class="form-control" required placeholder="" value="<?= htmlspecialchars($u_tipo_vehiculo ?? '') ?>">
+                            </div>
 
-                    <div class="mb-1">
-                        <label class="form-label">Combustible</label>
-                        <input type="text" name="combustible" class="form-control" required placeholder="ej. Gasolina" value="<?= htmlspecialchars($u_tipo_combustible ?? '') ?>">
-                    </div>
+                            <div class="mb-1">
+                                <label class="form-label">Combustible</label>
+                                <input type="text" name="combustible" class="form-control" required placeholder="" value="<?= htmlspecialchars($u_tipo_combustible ?? '') ?>">
+                            </div>
+                        </div>
 
-                    <div class="mb-1">
-                        <label class="form-label">Estado</label>
-                        <select name="estado_vehiculo" class="form-select" required>
-                            <option value="">-- Selecciona el estado --</option>
-                            <option value="1" <?= (isset($u_estado) && $u_estado == 1) ? 'selected' : '' ?>>Activo</option>
-                            <option value="0" <?= (isset($u_estado) && $u_estado == 0) ? 'selected' : '' ?>>Inactivo</option>
-                        </select>
-                    </div>
+                        <!-- SEGUNDA COLUMNA (DERECHA) -->
+                        <div class="col-md-6">
+                            <div class="mb-1">
+                                <label class="form-label">Estado</label>
+                                <select name="estado_vehiculo" class="form-select" required>
+                                    <option value="">-- Selecciona el estado --</option>
+                                    <option value="1" <?= (isset($u_estado) && $u_estado == 1) ? 'selected' : '' ?>>Activo</option>
+                                    <option value="0" <?= (isset($u_estado) && $u_estado == 0) ? 'selected' : '' ?>>Inactivo</option>
+                                </select>
+                            </div>
 
-                    <div class="mb-1">
-                        <label class="form-label">N° Póliza</label>
-                        <input type="text" name="numero_poliza" class="form-control" required placeholder="ej. 1234567890" value="<?= htmlspecialchars($u_numero_poliza ?? '') ?>">
-                    </div>
+                            <div class="mb-1">
+                                <label class="form-label">N° Póliza</label>
+                                <input type="text" name="numero_poliza" class="form-control" required placeholder="" value="<?= htmlspecialchars($u_numero_poliza ?? '') ?>">
+                            </div>
 
-                    <div class="mb-1">
-                        <label class="form-label">Gravamen</label>
-                        <input type="number" name="gravamen" class="form-control" required placeholder="ej. 1000" value="<?= htmlspecialchars($u_gravamen ?? '') ?>">
-                    </div>
+                            <div class="mb-1">
+                                <label class="form-label">Gravamen</label>
+                                <input type="string" name="gravamen" class="form-control" required placeholder="" value="<?= htmlspecialchars($u_gravamen ?? '') ?>">
+                            </div>
 
-                    <div class="mb-1">
-                        <label class="form-label" for="id_conductor">Conductor</label>
-                        <select name="id_conductor" id="id_conductor" class="form-select" required>
-                            <option value="">-- Selecciona un conductor --</option>
-                            <?php if (isset($conductores) && count($conductores) > 0): ?>
-                                <?php foreach ($conductores as $c): ?>
-                                    <?php $vencida = !empty($c['fecha_vencimiento']) && strtotime($c['fecha_vencimiento']) < strtotime(date('Y-m-d')); ?> 
-                                    <option value="<?= $c['id_conductor'] ?>"
-                                        <?= $vencida ? 'disabled' : '' ?>
-                                        <?= (isset($u_id_conductor) && $u_id_conductor == $c['id_conductor']) ? 'selected' : '' ?>>
-                                        <?= htmlspecialchars($c['nombre_conductor']) ?><?= $vencida ? '        ⚠️ESTE CONDUCTOR TIENE LA LICENCIA VENCIDA, NO SE PUEDE ASIGNAR' : '' ?>
-                                    </option>
-                                <?php endforeach; ?>
-                            <?php else: ?>
-                                <option value="" disabled>No hay conductores disponibles</option>
-                            <?php endif; ?>
-                        </select>
-                    </div>
+                            <div class="mb-3">
+                                <label class="form-label" for="id_conductor">Conductor</label>
+                                <select name="id_conductor" id="id_conductor" class="form-select" required>
+                                    <option value="">-- Selecciona un conductor --</option>
+                                    <?php if (!empty($conductores)): ?>
+                                        <?php 
+                                        $fechaActual = date('Y-m-d');
+                                        foreach ($conductores as $c): 
+                                            $fechaVenc = date('Y-m-d', strtotime($c['fecha_vencimiento']));
+                                            $vencida = !empty($c['fecha_vencimiento']) && ($fechaVenc < $fechaActual);
+                                        ?>
+                                            <option value="<?= $c['id_conductor'] ?>" 
+                                                    data-vencida="<?= $modeloLicencia ? '1' : '0' ?>"
+                                                    <?= $modeloLicencia ? 'disabled' : '' ?>
+                                                    <?= (isset($u_id_conductor) && $u_id_conductor == $c['id_conductor']) ? 'selected' : '' ?>>
+                                                <?= htmlspecialchars($c['nombre_conductor']) ?> <?= $modeloLicencia ? ' ⚠️ (LICENCIA VENCIDA)' : '' ?>
+                                            </option>
+                                        <?php endforeach; ?>
+                                    <?php else: ?>
+                                        <option value="" disabled>No hay conductores disponibles</option>
+                                    <?php endif; ?>
+                                </select>
+                            </div>
 
-                    <div class="mb-1">
-                        <label class="form-label" for="id_circulacion">Circulación (Placa)</label>
-                        <select name="id_circulacion" id="id_circulacion" class="form-select" required>
-                            <option value="">-- Selecciona una placa --</option>
-                            <?php if (isset($listaCirculaciones) && count($listaCirculaciones) > 0): ?>
-                                <?php foreach ($listaCirculaciones as $circ): ?>
-                                    <option value="<?= $circ['id_circulacion'] ?>" <?= (isset($u_id_circulacion) && $u_id_circulacion == $circ['id_circulacion']) ? 'selected' : '' ?>>
-                                        <?= htmlspecialchars($circ['placa']) ?>
-                                    </option>
-                                <?php endforeach; ?>
-                            <?php else: ?>
-                                <option value="" disabled>No hay circulaciones disponibles</option>
-                            <?php endif; ?>
-                        </select>
-                    </div>
+                            <div class="mb-1">
+                                <label class="form-label" for="id_circulacion">Circulación (Placa)</label>
+                                <select name="id_circulacion" id="id_circulacion" class="form-select" required>
+                                    <option value="">-- Selecciona una placa --</option>
+                                    <?php if (isset($listaCirculaciones) && count($listaCirculaciones) > 0): ?>
+                                        <?php foreach ($listaCirculaciones as $circ): ?>
+                                            <option value="<?= $circ['id_circulacion'] ?>" <?= (isset($u_id_circulacion) && $u_id_circulacion == $circ['id_circulacion']) ? 'selected' : '' ?>>
+                                                <?= htmlspecialchars($circ['placa']) ?>
+                                            </option>
+                                        <?php endforeach; ?>
+                                    <?php else: ?>
+                                        <option value="" disabled>No hay circulaciones disponibles</option>
+                                    <?php endif; ?>
+                                </select>
+                            </div>
+                        </div>
 
-                    <div class="d-flex justify-content-end gap-2">
+                    </div> <!-- Cierre del <div class="row g-2"> -->
+
+                    <div class="d-flex justify-content-end gap-2 mt-3">
                         <?php if (isset($en_modo_edicion) && $en_modo_edicion): ?>
                             <button type="submit" name="editar_vehiculo" class="btn btn-primary">Actualizar</button>
                         <?php else: ?>

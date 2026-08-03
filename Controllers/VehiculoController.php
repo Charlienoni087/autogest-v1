@@ -4,12 +4,14 @@ require_once __DIR__ . '/../Config/conexion.php';
 require_once __DIR__ . '/../Models/vehiculo.php';
 require_once __DIR__ . '/../Models/conductor.php';
 require_once __DIR__ . '/../Models/circulacion.php';
+require_once __DIR__ . '/../Models/licencia.php';
 
 // En tu controlador
 
 $modeloVehiculo = new Vehiculo($conexion);
 $modeloCirculacion = new Circulacion($conexion);
 $conductorModel = new Conductor($conexion); // usa tu conexión
+$modeloLicencia = new Licencia($conexion); // usa tu conexión
 
 // En VehiculoController.php, en el método que muestra el formulario de creación
 $conductores = $conductorModel->obtenerTodos();
@@ -217,6 +219,7 @@ if (isset($_GET['eliminar_circulacion'])) {
 }
 
 $listaCirculaciones = $modeloCirculacion->obtenerCirculaciones();
+$licenciasVencidas = $modeloLicencia->obtenerLicenciasVencidas();
 
 
 // En este bloque de codigo se muestra un mensaje de éxito si se ha guardado un registro correctamente
