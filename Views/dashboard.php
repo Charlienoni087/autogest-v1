@@ -79,7 +79,9 @@ if ($stmtEstados) {
     $stmtEstados->close();
 }
 
-// Generar los últimos 7 días como claves del arreglo, iniciando en 0 reportes
+// --- Datos para el gráfico: reportes de los últimos 7 días ---
+
+// 1. Generar los últimos 7 días como claves del arreglo, iniciando en 0 reportes
 $reportesPorDia = [];
 for ($i = 6; $i >= 0; $i--) {
     $fecha = date('Y-m-d', strtotime("-$i days"));
@@ -89,7 +91,7 @@ for ($i = 6; $i >= 0; $i--) {
 $fechaInicio = array_key_first($reportesPorDia); // fecha más antigua (hace 6 días)
 $fechaFin    = array_key_last($reportesPorDia);  // fecha más reciente (hoy)
 
-// Consultar cuántos reportes hay por día dentro de ese rango
+// 2. Consultar cuántos reportes hay por día dentro de ese rango
 $stmtChart = $conexion->prepare(
     "SELECT DATE(fecha) AS fecha, COUNT(*) AS total
      FROM reportes
@@ -102,7 +104,7 @@ if ($stmtChart) {
     $stmtChart->execute();
     $resultChart = $stmtChart->get_result();
 
-    // Rellenar el arreglo con los totales reales que sí tienen reportes
+    // 3. Rellenar el arreglo con los totales reales que sí tienen reportes
     while ($fila = $resultChart->fetch_assoc()) {
         $fechaFila = date('Y-m-d', strtotime($fila['fecha']));
         if (isset($reportesPorDia[$fechaFila])) {
@@ -112,6 +114,7 @@ if ($stmtChart) {
     $stmtChart->close();
 }
 
+// 4. Separar en las dos listas que Chart.js necesita: etiquetas y datos
 $chartLabels = [];
 $chartData = [];
 foreach ($reportesPorDia as $fecha => $total) {

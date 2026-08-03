@@ -94,7 +94,7 @@
         <div class="modal-content">
             <div class="modal-header text-white" style="background-color: #0c3b2e;">
                 <h5 class="modal-title" id="modalMantenimientoLabel">
-                    <i class="bi bi-plus-circle me-1"></i> <span id="modalTituloText">Registrar un nuevo mantenimiento</span>
+                    <span id="modalTituloText">Registrar un nuevo mantenimiento</span>
                 </h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
@@ -111,7 +111,7 @@
                             <?php 
                             if (!empty($listaVehiculos)) {
                                 foreach ($listaVehiculos as $vehiculo) {
-                                    echo '<option value="' . $vehiculo['id_vehiculo'] . '">' . htmlspecialchars($vehiculo['marca'] . ' ' . $vehiculo['modelo'] . ' (Chasis: ' . $vehiculo['chasis'] . ')') . '</option>';
+                                    echo '<option value="' . $vehiculo['id_vehiculo'] . '">' . htmlspecialchars($vehiculo['marca'] . ' ' . $vehiculo['modelo'] . ' ' . $vehiculo['placa'] . ' ' . '  -   N° Chasis: ' . $vehiculo['chasis'] . '') . '</option>';
                                 }
                             }
                             ?>
@@ -135,7 +135,7 @@
                     </div>
 
                     <div class="mb-3">
-                        <label for="costo" class="form-label fw-semibold">Costo ($)</label>
+                        <label for="costo" class="form-label fw-semibold">Costo (C$)</label>
                         <input type="number" step="0.01" class="form-control" id="costo" name="costo" placeholder="0.00" required>
                     </div>
 
