@@ -37,7 +37,7 @@
                                     <td><?php echo htmlspecialchars($m['fecha_mantenimiento']); ?></td>
                                     <td><?php echo !empty($m['fecha_salida']) ? htmlspecialchars($m['fecha_salida']) : '<span class="text-muted">En taller</span>'; ?></td>
                                     <td><?php echo htmlspecialchars($m['descripcion']); ?></td>
-                                    <td>$<?php echo number_format($m['costo'], 2); ?></td>
+                                    <td>C$<?php echo number_format($m['costo'], 2); ?></td>
                                     <td>
                                         <?php 
                                             $badgeBg = 'bg-warning text-dark';

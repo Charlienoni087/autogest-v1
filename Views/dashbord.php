@@ -1,26 +1,123 @@
 <?php
+require_once __DIR__ . '/../Config/conexion.php';
 
-include ("../Config/conexion.php");
-//SUBANSE ALAGRANP
-$sql = "SELECT COUNT(*) AS total FROM Vehiculos";
-$resul = $conexion->query($sql);
-$totalVehiculos = $resul->fetch_assoc()['total'];
+/**
+ * Ejecuta un COUNT(*) simple y devuelve el total como entero.
+ * Evita repetir el mismo patrón query() -> fetch_assoc() -> ['total'] varias veces.
+ */
+function contarRegistros(mysqli $conexion, string $sql): int
+{
+    $resultado = $conexion->query($sql);
+    return $resultado ? (int) $resultado->fetch_assoc()['total'] : 0;
+}
 
+// --- Tarjetas de resumen ---
+$totalVehiculos     = contarRegistros($conexion, "SELECT COUNT(*) AS total FROM Vehiculos");
+$conductoresActivos = contarRegistros($conexion, "SELECT COUNT(*) AS total FROM Conductores WHERE estado = 1");
+$totalLicencias     = contarRegistros($conexion, "SELECT COUNT(*) AS total FROM Licencia");
+$totalReportes      = contarRegistros($conexion, "SELECT COUNT(*) AS total FROM Reportes");
 
-$sql = "SELECT COUNT(*) AS total FROM Conductores WHERE estado = 1";
-$result = $conexion->query($sql);
-$conductoresActivos = $result->fetch_assoc()['total'];
+// --- Últimos 8 reportes de circulación ---
+$listaReportes = [];
+$stmtReportes = $conexion->prepare(
+    "SELECT r.fecha, r.hora_entrada, r.hora_salida, c.nombre_conductor, v.marca, v.modelo, ci.placa
+     FROM reportes r
+     INNER JOIN conductores c ON r.id_conductor = c.id_conductor
+     INNER JOIN vehiculos v ON r.id_vehiculo = v.id_vehiculo
+     LEFT JOIN circulacion ci ON v.id_circulacion = ci.id_circulacion
+     ORDER BY r.fecha DESC, r.hora_entrada DESC
+     LIMIT 8"
+);
+if ($stmtReportes) {
+    $stmtReportes->execute();
+    $resultReportes = $stmtReportes->get_result();
+    $listaReportes = $resultReportes ? $resultReportes->fetch_all(MYSQLI_ASSOC) : [];
+    $stmtReportes->close();
+}
 
+// --- Estatus de vehículos ---
 
-$sql = "SELECT COUNT(*) AS total FROM Licencia";
-$res = $conexion->query($sql);
-$totalLicencias = $res->fetch_assoc()['total'];
+/**
+ * Decide cómo mostrar un vehículo (etiqueta y colores) según su estado.
+ * Separa la lógica de "qué significa este estado" de cómo se dibuja en el HTML.
+ */
+function clasificarEstadoVehiculo(?string $estado): array
+{
+    $estado = trim($estado ?? '');
+    $esCritico = stripos($estado, 'mantenimiento') !== false
+        || stripos($estado, 'repar') !== false
+        || stripos($estado, 'crit') !== false;
 
+    if ($esCritico) {
+        return [
+            'label'        => 'Mantenimiento',
+            'bgColor'      => '#ffba00',
+            'textColor'    => '#0c3d2e',
+            'subTextColor' => '#4a3b00',
+        ];
+    }
 
-$sql = "SELECT COUNT(*) AS total FROM Reportes";
-$resultado = $conexion->query($sql);
-$totalReportes = $resultado->fetch_assoc()['total'];
+    return [
+        'label'        => 'Activo en Ruta',
+        'bgColor'      => '#6d9773',
+        'textColor'    => 'white',
+        'subTextColor' => '#e8f7f6',
+    ];
+}
 
+$estadoVehiculos = [];
+$stmtEstados = $conexion->prepare(
+    "SELECT v.id_vehiculo, v.marca, v.modelo, ci.placa, v.estado
+     FROM vehiculos v
+     LEFT JOIN circulacion ci ON v.id_circulacion = ci.id_circulacion
+     ORDER BY CASE WHEN LOWER(v.estado) LIKE '%mantenimiento%' THEN 0 ELSE 1 END, v.marca, v.modelo"
+);
+if ($stmtEstados) {
+    $stmtEstados->execute();
+    $resultEstados = $stmtEstados->get_result();
+    $estadoVehiculos = $resultEstados ? $resultEstados->fetch_all(MYSQLI_ASSOC) : [];
+    $stmtEstados->close();
+}
+
+// Generar los últimos 7 días como claves del arreglo, iniciando en 0 reportes
+$reportesPorDia = [];
+for ($i = 6; $i >= 0; $i--) {
+    $fecha = date('Y-m-d', strtotime("-$i days"));
+    $reportesPorDia[$fecha] = 0;
+}
+
+$fechaInicio = array_key_first($reportesPorDia); // fecha más antigua (hace 6 días)
+$fechaFin    = array_key_last($reportesPorDia);  // fecha más reciente (hoy)
+
+// Consultar cuántos reportes hay por día dentro de ese rango
+$stmtChart = $conexion->prepare(
+    "SELECT DATE(fecha) AS fecha, COUNT(*) AS total
+     FROM reportes
+     WHERE fecha BETWEEN ? AND ?
+     GROUP BY DATE(fecha)"
+);
+
+if ($stmtChart) {
+    $stmtChart->bind_param('ss', $fechaInicio, $fechaFin);
+    $stmtChart->execute();
+    $resultChart = $stmtChart->get_result();
+
+    // Rellenar el arreglo con los totales reales que sí tienen reportes
+    while ($fila = $resultChart->fetch_assoc()) {
+        $fechaFila = date('Y-m-d', strtotime($fila['fecha']));
+        if (isset($reportesPorDia[$fechaFila])) {
+            $reportesPorDia[$fechaFila] = (int) $fila['total'];
+        }
+    }
+    $stmtChart->close();
+}
+
+$chartLabels = [];
+$chartData = [];
+foreach ($reportesPorDia as $fecha => $total) {
+    $chartLabels[] = date('d/m', strtotime($fecha)); // ej: "28/07"
+    $chartData[]    = $total;
+}
 ?>
 
 <!-- Contenedor del Dashboard  -->
@@ -101,25 +198,20 @@ $totalReportes = $resultado->fetch_assoc()['total'];
                                 </tr>
                             </thead>
                             <tbody style="color: #012939;">
-                                <!-- Datos de ejemplo dinámicos basados en tu tabla Reportes -->
-                                <tr>
-                                    <td>Marcos Gutiérrez</td>
-                                    <td>10-02-2026</td>
-                                    <td>08:00 AM</td>
-                                    <td>05:00 PM</td>
-                                </tr>
-                                <tr>
-                                    <td>Antonio Martínez</td>
-                                    <td>11-02-2026</td>
-                                    <td>07:30 AM</td>
-                                    <td>04:30 PM</td>
-                                </tr>
-                                <tr>
-                                    <td>Alejandro Zambrana</td>
-                                    <td>12-02-2026</td>
-                                    <td>09:00 AM</td>
-                                    <td>06:30 PM</td>
-                                </tr>
+                                <?php if (!empty($listaReportes)): ?>
+                                    <?php foreach ($listaReportes as $row): ?>
+                                        <tr>
+                                            <td><?= htmlspecialchars($row['nombre_conductor'] ?? 'Sin conductor') ?></td>
+                                            <td><?= htmlspecialchars($row['fecha'] ?? '-') ?></td>
+                                            <td><?= htmlspecialchars($row['hora_entrada'] ?? '') ?></td>
+                                            <td><?= htmlspecialchars($row['hora_salida'] ?? '-') ?></td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                <?php else: ?>
+                                    <tr>
+                                        <td colspan="4" class="text-center text-muted">No hay reportes registrados.</td>
+                                    </tr>
+                                <?php endif; ?>
                             </tbody>
                         </table>
                     </div>
@@ -132,15 +224,20 @@ $totalReportes = $resultado->fetch_assoc()['total'];
             <div class="card shadow-sm p-3 bg-white rounded h-100">
                 <div class="card-body">
                     <h5 class="card-title mb-3" style="color: #0c3d2e; font-weight: bold;">Estatus de Vehículos</h5>
-                    
-                    <div class="p-2 mb-2 rounded" style="background-color: #ffba00;">
-                        <span class="d-block font-weight-bold" style="color:  #0c3d2e; font-weight: bold;">Mantenimiento</span>
-                        <small class="text-muted">Toyota Hilux - Placa M 2345</small>
-                    </div>
-                    <div class="p-2 mb-2 rounded" style="background-color: #6d9773; color: white;">
-                        <span class="d-block font-weight-bold" style="font-weight: bold;">Activo en Ruta</span>
-                        <small style="color: #e8f7f6;">Hyundai Accent - Placa L 8976</small>
-                    </div>
+
+                    <?php if (!empty($estadoVehiculos)): ?>
+                        <?php foreach ($estadoVehiculos as $vehiculo): ?>
+                            <?php $estilo = clasificarEstadoVehiculo($vehiculo['estado'] ?? ''); ?>
+                            <div class="p-2 mb-2 rounded" style="background-color: <?= $estilo['bgColor'] ?>; color: <?= $estilo['textColor'] ?>;">
+                                <span class="d-block fw-bold"><?= htmlspecialchars($estilo['label']) ?></span>
+                                <small style="color: <?= $estilo['subTextColor'] ?>;">
+                                    <?= htmlspecialchars(($vehiculo['marca'] ?? 'Vehículo') . ' ' . ($vehiculo['modelo'] ?? '') . ' - Placa ' . ($vehiculo['placa'] ?? 'Sin placa')) ?>
+                                </small>
+                            </div>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <div class="text-muted">No hay vehículos registrados.</div>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
@@ -151,10 +248,8 @@ $totalReportes = $resultado->fetch_assoc()['total'];
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
     const ctx = document.getElementById('graficoReportes').getContext('2d');
-    
-    // Tus datos de Python migrados (Ejemplo: Reportes semanales por día)
-    const dias = ["Lun", "Mar", "Mie", "Jue", "Vie", "Sab", "Dom"];
-    const reportesPorDia = [12, 19, 8, 15, 22, 30, 10]; // Cantidad de salidas/reportes
+    const dias = <?= json_encode($chartLabels) ?>;
+    const reportesPorDia = <?= json_encode($chartData) ?>;
 
     new Chart(ctx, {
         type: 'bar',
