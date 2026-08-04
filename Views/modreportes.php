@@ -30,6 +30,14 @@ $query_filtros = http_build_query([
         <div class="alert alert-<?= $tipo_mensaje ?> m-2"><?= htmlspecialchars($mensaje) ?></div>
     <?php endif; ?>
 
+    <form id="formExportar" action="../Controllers/ExportarReportesController.php" method="POST" target="_blank">
+            <input type="hidden" name="formato" id="input_formato">
+            <input type="hidden" name="fecha_inicio" id="input_fecha_inicio">
+            <input type="hidden" name="fecha_fin" id="input_fecha_fin">
+            <input type="hidden" name="f_id_conductor" id="input_id_conductor">
+            <input type="hidden" name="f_id_vehiculo" id="input_id_vehiculo">
+        </form>
+
     <div class="row">
         <!-- COLUMNA DEL FORMULARIO -->
         <div class="col-md-4 mb-4">
@@ -129,8 +137,8 @@ $query_filtros = http_build_query([
                         <div class="col-12 mt-2">
                             <button type="submit" class="btn btn-sm btn-primary">Filtrar</button>
                             <a href="main.php?page=reportes" class="btn btn-sm btn-outline-secondary">Limpiar</a>
-                            <a href="/AUTOGEST/Controllers/ExportarReportesController.php?formato=excel&<?= $query_filtros ?>" class="btn btn-sm btn-success float-end ms-2"><i class="bi bi-file-earmark-text-fill"></i>Exportar Excel</a>
-                            <a href="/AUTOGEST/Controllers/ExportarReportesController.php?formato=pdf&<?= $query_filtros ?>" target="_blank" class="btn btn-sm btn-danger float-end"><i class="bi bi-file-earmark-text-fill"></i>Exportar PDF</a>
+                            <button type="button" onclick="exportarReporte('excel')" class="btn btn-sm btn-success float-end ms-2"><i class="bi bi-file-earmark-text-fill"></i> Exportar Excel</button>
+                            <button type="button" onclick="exportarReporte('pdf')" class="btn btn-sm btn-danger float-end"><i class="bi bi-file-earmark-text-fill"></i> Exportar PDF</button>
                         </div>
                     </form>
                 </div>
@@ -182,3 +190,14 @@ $query_filtros = http_build_query([
         </div>
     </div>
 </div>
+
+<script>
+function exportarReporte(formato) {
+    document.getElementById('input_formato').value = formato;
+    document.getElementById('input_fecha_inicio').value = document.getElementById('fecha_inicio')?.value || '';
+    document.getElementById('input_fecha_fin').value = document.getElementById('fecha_fin')?.value || '';
+    document.getElementById('input_id_conductor').value = document.getElementById('f_id_conductor')?.value || '';
+    document.getElementById('input_id_vehiculo').value = document.getElementById('f_id_vehiculo')?.value || '';
+    document.getElementById('formExportar').submit();
+}
+</script>

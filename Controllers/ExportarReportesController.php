@@ -5,11 +5,11 @@ require_once __DIR__ . '/../Models/reportes.php';
 
 $reportesModel = new Reportes($conexion);
 
-$fecha_inicio = $_GET['fecha_inicio'] ?? '';
-$fecha_fin = $_GET['fecha_fin'] ?? '';
-$id_conductor = $_GET['f_id_conductor'] ?? '';
-$id_vehiculo = $_GET['f_id_vehiculo'] ?? '';
-$formato = $_GET['formato'] ?? 'excel';
+$fecha_inicio = $_REQUEST['fecha_inicio'] ?? '';
+$fecha_fin = $_REQUEST['fecha_fin'] ?? '';
+$id_conductor = $_REQUEST['f_id_conductor'] ?? '';
+$id_vehiculo = $_REQUEST['f_id_vehiculo'] ?? '';
+$formato = $_REQUEST['formato'] ?? 'excel';
 
 $hay_filtros = !empty($fecha_inicio) || !empty($fecha_fin) || !empty($id_conductor) || !empty($id_vehiculo);
 
@@ -75,12 +75,50 @@ if ($formato === 'excel') {
 
         * { box-sizing: border-box; }
 
+        @page {
+            size: A4;
+            margin: 15mm 12mm;
+        }
+
         body {
             font-family: 'Segoe UI', Arial, sans-serif;
             color: var(--azul-oscuro);
             margin: 0;
-            padding: 30px 40px;
+            padding: 0 40px;
             background: #ffffff;
+        }
+
+        /* ---- BARRA DE ACCIONES ---- */
+        .toolbar {
+            position: sticky;
+            top: 0;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            padding: 18px 0;
+            background: #ffffff;
+            z-index: 10;
+        }
+
+        .btn-imprimir {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background-color: var(--azul-acento);
+            color: #fff;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(12,59,46,0.25);
+            transition: background-color .15s ease, transform .15s ease;
+        }
+
+        .btn-imprimir:hover {
+            background-color: #0a2f24;
+            transform: translateY(-1px);
         }
 
         /* ---- ENCABEZADO CON LOGO ---- */
@@ -160,6 +198,7 @@ if ($formato === 'excel') {
         .pie-pagina {
             margin-top: 30px;
             padding-top: 10px;
+            padding-bottom: 30px;
             border-top: 1px solid var(--borde);
             font-size: 11px;
             color: var(--gris-texto);
@@ -167,33 +206,22 @@ if ($formato === 'excel') {
         }
 
         .no-imprimir {
-            margin-bottom: 20px;
-            text-align: right;
-        }
-
-        .no-imprimir button {
-            background-color: var(--azul-acento);
-            color: #fff;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 6px;
-            font-size: 13px;
-            cursor: pointer;
-        }
-
-        .no-imprimir button:hover {
-            background-color: var(--azul-primario);
+            display: block;
         }
 
         @media print {
-            .no-imprimir { display: none; }
-            body { padding: 10px 20px; }
+            .no-imprimir { display: none !important; }
+            body { padding: 0; }
+            table { box-shadow: none; }
+            .encabezado { margin-top: 0; }
         }
     </style>
 </head>
 <body>
-    <div class="no-imprimir">
-        <button onclick="window.print()">🖨️ Guardar como PDF / Imprimir</button>
+    <div class="toolbar no-imprimir">
+        <button class="btn-imprimir" onclick="window.print()">
+            🖨️ Guardar como PDF / Imprimir
+        </button>
     </div>
 
     <div class="encabezado">
@@ -237,9 +265,5 @@ if ($formato === 'excel') {
     <div class="pie-pagina">
         Reporte generado automáticamente por el sistema AutoGest
     </div>
-
-    <script>
-        window.onload = () => window.print();
-    </script>
 </body>
 </html>

@@ -205,7 +205,7 @@ $modulosPermitidos = $permisos[$rol] ?? [];
             } else {
                 switch ($page) {
                     case 'dashboard':
-                        include 'dashbord.php';
+                        include 'dashboard.php';
                         break;
 
                     case 'vehiculos':
