@@ -66,5 +66,24 @@ class Conductor {
         $stmt->bind_param("i", $id_conductor);
         return $stmt->execute();
     }
+
+    public function obtenerConductoresConLicencia() {
+        $sql = "SELECT 
+                    c.id_conductor,
+                    c.nombre AS nombre_conductor,
+                    l.id_licencia,
+                    l.numero_licencia,
+                    l.fecha_vencimiento
+                FROM conductores c
+                INNER JOIN licencias l ON c.id_licencia = l.id_licencia";
+
+        $stmt = $this->db->prepare($sql);
+        if (!$stmt) {
+            die("Error prepare: " . $this->db->error);
+        }
+        $stmt->execute();
+        $resultado = $stmt->get_result();
+        return $resultado->fetch_all(MYSQLI_ASSOC);
+    }
 }
 ?>

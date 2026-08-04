@@ -217,7 +217,10 @@ if (isset($_GET['eliminar_circulacion'])) {
         echo "<div class='alert alert-danger m-2'>Error al eliminar la circulación.</div>";
     }
 }
+$licenciasVencidas = $modeloLicencia->obtenerLicenciasVencidas();
 
+// Extraes solo los IDs de las licencias vencidas en un array simple
+$idsLicenciasVencidas = array_column($licenciasVencidas, 'id_licencia');
 $listaCirculaciones = $modeloCirculacion->obtenerCirculaciones();
 $licenciasVencidas = $modeloLicencia->obtenerLicenciasVencidas();
 

@@ -3,6 +3,7 @@
 /** @var array $conductores */
 /** @var array $circulaciones */
 /** @var array $modeloLicencia */
+/** @var array $idsLicenciasVencidas */
 $circulaciones = $circulaciones??[];
 $en_modo_edicion = $en_modo_edicion??[];
 $en_modo_edicion_circulacion = $en_modo_edicion_circulacion??[];
@@ -193,29 +194,30 @@ $modelolicencia = $modeloLicencia??[];
                                 <input type="string" name="gravamen" class="form-control" required placeholder="" value="<?= htmlspecialchars($u_gravamen ?? '') ?>">
                             </div>
 
-                            <div class="mb-3">
-                                <label class="form-label" for="id_conductor">Conductor</label>
-                                <select name="id_conductor" id="id_conductor" class="form-select" required>
-                                    <option value="">-- Selecciona un conductor --</option>
-                                    <?php if (!empty($conductores)): ?>
-                                        <?php 
-                                        $fechaActual = date('Y-m-d');
-                                        foreach ($conductores as $c): 
-                                            $fechaVenc = date('Y-m-d', strtotime($c['fecha_vencimiento']));
-                                            $vencida = !empty($c['fecha_vencimiento']) && ($fechaVenc < $fechaActual);
-                                        ?>
-                                            <option value="<?= $c['id_conductor'] ?>" 
-                                                    data-vencida="<?= $modeloLicencia ? '1' : '0' ?>"
-                                                    <?= $modeloLicencia ? 'disabled' : '' ?>
-                                                    <?= (isset($u_id_conductor) && $u_id_conductor == $c['id_conductor']) ? 'selected' : '' ?>>
-                                                <?= htmlspecialchars($c['nombre_conductor']) ?> <?= $modeloLicencia ? ' ⚠️ (LICENCIA VENCIDA)' : '' ?>
-                                            </option>
-                                        <?php endforeach; ?>
-                                    <?php else: ?>
-                                        <option value="" disabled>No hay conductores disponibles</option>
-                                    <?php endif; ?>
-                                </select>
-                            </div>
+                           <div class="mb-3">
+    <label class="form-label" for="id_conductor">Conductor</label>
+    <select name="id_conductor" id="id_conductor" class="form-select" required>
+        <option value="">-- Selecciona un conductor --</option>
+
+        <?php if (!empty($conductores)): ?>
+            <?php foreach ($conductores as $c): ?>
+                <?php 
+                    // Verificamos si la id_licencia de este conductor está en la lista de vencidas
+                    $vencida = in_array($c['id_licencia'], $idsLicenciasVencidas); 
+                ?>
+                <option value="<?= $c['id_conductor'] ?>" 
+                    <?= $vencida ? 'disabled' : '' ?>
+                    <?= (isset($u_id_conductor) && $u_id_conductor == $c['id_conductor']) ? 'selected' : '' ?>>
+                    
+                    <?= htmlspecialchars($c['nombre_conductor'] ?? $c['nombre']) ?> 
+                    <?= $vencida ? ' ⚠️ (LICENCIA VENCIDA)' : '' ?>
+                </option>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <option value="" disabled>No hay conductores disponibles</option>
+        <?php endif; ?>
+    </select>
+</div>
 
                             <div class="mb-1">
                                 <label class="form-label" for="id_circulacion">Circulación (Placa)</label>
