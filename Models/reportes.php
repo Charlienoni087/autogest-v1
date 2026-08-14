@@ -131,12 +131,15 @@ class Reportes {
 
     
     public function listarVehiculos(): array {
-        $sql = "SELECT v.id_vehiculo, v.marca, v.modelo, ci.placa
-                FROM vehiculos v
-                INNER JOIN circulacion ci ON v.id_circulacion = ci.id_circulacion
-                ORDER BY v.marca";
-        $resultado = $this->db->query($sql);
-        return $resultado ? $resultado->fetch_all(MYSQLI_ASSOC) : [];
+    $sql = "SELECT v.id_vehiculo, v.marca, v.modelo, v.estado, ci.placa,
+                   (SELECT m.estado FROM Mantenimiento m 
+                    WHERE m.id_vehiculo = v.id_vehiculo 
+                    ORDER BY m.fecha_mantenimiento DESC LIMIT 1) AS estado_mantenimiento
+            FROM vehiculos v
+            INNER JOIN circulacion ci ON v.id_circulacion = ci.id_circulacion
+            ORDER BY v.marca";
+    $resultado = $this->db->query($sql);
+    return $resultado ? $resultado->fetch_all(MYSQLI_ASSOC) : [];
     }
 }
 ?>

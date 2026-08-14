@@ -209,27 +209,27 @@ $modulosPermitidos = $permisos[$rol] ?? [];
                         break;
 
                     case 'vehiculos':
-                        echo "<h2>Módulo de Vehículos</h2>";
+                        echo "<h2>Vehículos</h2>";
                         require_once __DIR__ . '/../Controllers/VehiculoController.php';
                         break;
 
                     case 'conductores':
-                        echo "<h2>Módulo de Conductores</h2>";
+                        echo "<h2>Conductores</h2>";
                         require_once __DIR__ . '/../Controllers/ConductorController.php';
                         break;
 
                     case 'usuarios':
-                        echo "<h2>Módulo de Usuarios</h2>";
+                        echo "<h2>Usuarios</h2>";
                         require_once __DIR__ . '/../Controllers/UsuarioController.php';
                         break;
 
                     case 'reportes':
-                        echo "<h2>Módulo de Reportes</h2>";
+                        echo "<h2>Reportes</h2>";
                         include 'modreportes.php';
                         break;
 
                     case 'mantenimiento':
-                        echo "<h2>Módulo de Mantenimiento</h2>";
+                        echo "<h2>Mantenimiento</h2>";
                         require_once __DIR__ . '/../Controllers/MantenimientoController.php';
                         break;
 

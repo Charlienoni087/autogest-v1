@@ -1,12 +1,14 @@
 <?php
 
 require_once __DIR__ . '/../Models/reportes.php';
+require_once __DIR__ . '/../Models/vehiculo.php';
 
 if (!isset($conexion)) {
     require_once __DIR__ . '/../Config/conexion.php';
 }
 
 $reportesModel = new Reportes($conexion);
+$vehiculoModel = new Vehiculo($conexion);
 
 $mensaje = "";
 $tipo_mensaje = ""; 
@@ -19,7 +21,12 @@ if (isset($_POST['guardar_reporte'])) {
     $id_conductor = intval($_POST['id_conductor']);
     $id_vehiculo = intval($_POST['id_vehiculo']);
 
-    if ($reportesModel->crear($fecha, $hora_entrada, $hora_salida, $id_conductor, $id_vehiculo)) {
+    $validacion = $vehiculoModel->puedeAsignarVehiculo($id_vehiculo);
+
+    if (!$validacion['permitido']) {
+        $mensaje = "No se pudo seleccionar el vehículo porque " . lcfirst($validacion['motivo']);
+        $tipo_mensaje = "danger";
+    } elseif ($reportesModel->crear($fecha, $hora_entrada, $hora_salida, $id_conductor, $id_vehiculo)) {
         $mensaje = "¡Reporte registrado con éxito!";
         $tipo_mensaje = "success";
     } else {
@@ -37,7 +44,12 @@ if (isset($_POST['actualizar_reporte'])) {
     $id_conductor = intval($_POST['id_conductor']);
     $id_vehiculo = intval($_POST['id_vehiculo']);
 
-    if ($reportesModel->actualizar($id_reporte, $fecha, $hora_entrada, $hora_salida, $id_conductor, $id_vehiculo)) {
+    $validacion = $vehiculoModel->puedeAsignarVehiculo($id_vehiculo);
+
+    if (!$validacion['permitido']) {
+        $mensaje = "No se pudo seleccionar el vehículo porque " . lcfirst($validacion['motivo']);
+        $tipo_mensaje = "danger";
+    } elseif ($reportesModel->actualizar($id_reporte, $fecha, $hora_entrada, $hora_salida, $id_conductor, $id_vehiculo)) {
         $mensaje = "¡Reporte actualizado correctamente!";
         $tipo_mensaje = "success";
     } else {
@@ -45,7 +57,6 @@ if (isset($_POST['actualizar_reporte'])) {
         $tipo_mensaje = "danger";
     }
 }
-
 // ELIMINAR
 if (isset($_GET['eliminar'])) {
     $id_eliminar = intval($_GET['eliminar']);

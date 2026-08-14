@@ -75,10 +75,17 @@ $modelolicencia = $modeloLicencia??[];
                                         <td><?= htmlspecialchars($vehiculo['tipo_combustible']) ?></td>
                                         
                                         <td>
-                                            <?php if ($vehiculo['estado'] == 1): ?>
-                                                <span class="badge bg-success">Activo</span>
-                                            <?php else: ?>
+                                            <?php 
+                                                $en_mantenimiento = in_array($vehiculo['estado_mantenimiento'] ?? '', ['Pendiente', 'En Proceso']);
+                                            ?>
+                                            <?php if ($en_mantenimiento): ?>
+                                                <span class="badge bg-warning text-dark">
+                                                    <i class="bi bi-tools me-1"></i>En mantenimiento
+                                                </span>
+                                            <?php elseif ($vehiculo['estado'] != 1): ?>
                                                 <span class="badge bg-danger">Inactivo</span>
+                                            <?php else: ?>
+                                                <span class="badge bg-success">Activo</span>
                                             <?php endif; ?>
                                         </td>
                                         <td><?= htmlspecialchars($vehiculo['numero_poliza']) ?></td>

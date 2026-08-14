@@ -72,16 +72,28 @@ $query_filtros = http_build_query([
                                 <?php endforeach; ?>
                             </select>
                         </div>
-                        <div class="mb-3">
+                       <div class="mb-3">
                             <label class="form-label">Vehículo</label>
                             <select name="id_vehiculo" class="form-select" required>
                                 <option value="">-- Selecciona un vehículo --</option>
                                 <?php foreach ($listaVehiculos as $v): ?>
-                                    <option value="<?= $v['id_vehiculo'] ?>" <?= $r_id_vehiculo == $v['id_vehiculo'] ? 'selected' : '' ?>>
+                                    <?php 
+                                        $en_mantenimiento = in_array($v['estado_mantenimiento'] ?? '', ['Pendiente', 'En Proceso']);
+                                        $bloqueado = $en_mantenimiento || $v['estado'] != 1;
+                                    ?>
+                                    <option value="<?= $v['id_vehiculo'] ?>" 
+                                        <?= $bloqueado ? 'disabled' : '' ?>
+                                        <?= $r_id_vehiculo == $v['id_vehiculo'] ? 'selected' : '' ?>>
                                         <?= htmlspecialchars($v['marca'] . ' ' . $v['modelo'] . ' - ' . $v['placa']) ?>
+                                        <?= $en_mantenimiento ? ' — Vehiculo en mantenimiento' : ($bloqueado ? ' — Unidad Inactiva' : '') ?>
                                     </option>
                                 <?php endforeach; ?>
                             </select>
+                            <?php if (!empty($mensaje) && $tipo_mensaje === 'danger' && str_contains($mensaje, 'mantenimiento')): ?>
+                                <div class="form-text text-danger">
+                                    <i class="bi bi-exclamation-triangle-fill"></i> <?= htmlspecialchars($mensaje) ?>
+                                </div>
+                            <?php endif; ?>
                         </div>
 
                         <?php if ($en_modo_edicion): ?>
