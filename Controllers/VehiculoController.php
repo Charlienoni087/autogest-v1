@@ -65,11 +65,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && (isset($_POST['agregar_vehiculo']) 
 
 if (isset($_GET['eliminar_vehiculo'])) {
     $id = intval($_GET['eliminar_vehiculo']);
-    if ($modeloVehiculo->eliminarVehiculo($id)) {
-        header("Location: /AutoGest/Views/main.php?page=vehiculos&delete_success=vehiculo");
-        exit();
-    } else {
-        echo "<div class='alert alert-danger m-2'>Error al eliminar el vehículo.</div>";
+    try {
+        if ($modeloVehiculo->eliminarVehiculo($id)) {
+            header("Location: /AutoGest/Views/main.php?page=vehiculos&delete_success=vehiculo");
+            exit();
+        } else {
+            echo "<div class='alert alert-danger m-2'>Error desconocido al eliminar el vehículo.</div>";
+        }
+    } catch (Exception $e) {
+        echo '<div class="alert alert-danger alert-dismissible fade show m-2" role="alert">
+                <strong>No se puede eliminar:</strong> ' . $e->getMessage() . '
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+                </div>';
     }
 }
 
@@ -194,27 +201,35 @@ if (isset($_GET['editar_circulacion'])) {
 
 if (isset($_GET['eliminar_circulacion'])) {
     $id = intval($_GET['eliminar_circulacion']);
-    if ($modeloCirculacion->eliminarCirculacion($id)) {
-        header("Location: main.php?page=vehiculos&delete_success=circulacion");
-        exit();
-    } else {
-        echo "<div class='alert alert-danger m-2'>Error al eliminar la circulación.</div>";
+    try {
+        if ($modeloCirculacion->eliminarCirculacion($id)) {
+            header("Location: /AutoGest/Views/main.php?page=vehiculos&delete_success=circulacion");
+            exit();
+        } else {
+            echo "<div class='alert alert-danger m-2'>Error desconocido al eliminar la circulación.</div>";
+        }
+    } catch (Exception $e) {
+        echo '<div class="alert alert-danger alert-dismissible fade show m-2" role="alert">
+                <strong>No se puede eliminar:</strong> ' . $e->getMessage() . '
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+                </div>';
     }
 }
 
 if (isset($_GET['eliminar_circulacion'])) {
     $id = intval($_GET['eliminar_circulacion']);
-
-    if ($modeloCirculacion->estaEnUso($id)) {
-        header("Location: /AutoGest/Views/main.php?page=vehiculos&error=circulacion_en_uso");
-        exit();
-    }
-
-    if ($modeloCirculacion->eliminarCirculacion($id)) {
-        header("Location: main.php?page=vehiculos&delete_success=circulacion");
-        exit();
-    } else {
-        echo "<div class='alert alert-danger m-2'>Error al eliminar la circulación.</div>";
+    try {
+        if ($modeloCirculacion->eliminarCirculacion($id)) {
+            header("Location: /AutoGest/Views/main.php?page=vehiculos&delete_success=circulacion");
+            exit();
+        } else {
+            echo "<div class='alert alert-danger m-2'>Error desconocido al eliminar la circulación.</div>";
+        }
+    } catch (Exception $e) {
+        echo '<div class="alert alert-danger alert-dismissible fade show m-2" role="alert">
+                <strong>No se puede eliminar:</strong> ' . $e->getMessage() . '
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+                </div>';
     }
 }
 $licenciasVencidas = $modeloLicencia->obtenerLicenciasVencidas();
@@ -253,7 +268,7 @@ if (isset($_GET['save_success']) || isset($_GET['update_success']) || isset($_GE
     echo '<div id="alertaExito" class="alert alert-success alert-dismissible fade show m-2" role="alert">
             ' . $mensaje . '
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
-          </div>';
+            </div>';
 }
 
 
@@ -267,3 +282,14 @@ if (isset($_GET['save_success']) || isset($_GET['update_success']) || isset($_GE
 require_once __DIR__ . '/../Views/modVehiculo.php';
 
 ?>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    let alertas = document.querySelectorAll('.alert');
+    alertas.forEach(function (alerta) {
+        setTimeout(function () {
+            let bsAlert = new bootstrap.Alert(alerta);
+            bsAlert.close();
+        }, 3000);
+    });
+});
+</script>

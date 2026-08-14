@@ -139,9 +139,27 @@ class Circulacion
      */
     public function eliminarCirculacion(int $id): bool
     {
-        $sql = "DELETE FROM {$this->tabla} WHERE id_circulacion = ?";
+        // 1. Verificar si la circulación está asignada a un vehículo
+        $sqlVehiculos = "SELECT COUNT(*) as total FROM Vehiculos WHERE id_circulacion = ?";
+        $stmtV = $this->conn->prepare($sqlVehiculos);
+        if (!$stmtV) {
+            die("Error prepare: " . $this->conn->error);
+        }
+        $stmtV->bind_param("i", $id);
+        $stmtV->execute();
+        $resultadoV = $stmtV->get_result()->fetch_assoc();
+        $stmtV->close();
 
+        if ($resultadoV['total'] > 0) {
+            throw new Exception("Esta circulación está actualmente asignada a un vehículo y no puede ser eliminada.");
+        }
+
+        // 2. Si no está en uso, procedemos a eliminar
+        $sql = "DELETE FROM {$this->tabla} WHERE id_circulacion = ?";
         $stmt = $this->conn->prepare($sql);
+        if (!$stmt) {
+            die("Error al preparar eliminación: " . $this->conn->error);
+        }
         $stmt->bind_param("i", $id);
 
         $exito = $stmt->execute();

@@ -74,11 +74,18 @@ if(isset($_GET['editar_conductor'])){
 
 if (isset($_GET['eliminar_conductor'])) {
     $id = intval($_GET['eliminar_conductor']);
-    if ($modeloConductor->eliminar($id)) {
-        header("Location: main.php?page=conductores&delete_success=conductor");
-        exit();
-    } else {
-        echo "<div class='alert alert-danger m-2'>Error al eliminar el conductor.</div>";
+    try {
+        if ($modeloConductor->eliminar($id)) {
+            header("Location: main.php?page=conductores&delete_success=conductor");
+            exit();
+        } else {
+            echo "<div class='alert alert-danger m-2'>Error desconocido al eliminar el conductor.</div>";
+        }
+    } catch (Exception $e) {
+        echo '<div class="alert alert-danger alert-dismissible fade show m-2" role="alert">
+                <strong>No se puede eliminar:</strong> ' . $e->getMessage() . '
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+                </div>';
     }
 }
 
@@ -121,11 +128,18 @@ if($_SERVER["REQUEST_METHOD"] === "POST"&& isset($_POST['editar_licencia'])){
 
 if (isset($_GET['eliminar_licencia'])) {
     $id = intval($_GET['eliminar_licencia']);
-    if ($modeloLicencia->eliminar($id)) {
-        header("Location: main.php?page=conductores&delete_success=licencia");
-        exit();
-    } else {
-        echo "<div class='alert alert-danger m-2'>Error al eliminar el conductor.</div>";
+    try {
+        if ($modeloLicencia->eliminar($id)) {
+            header("Location: main.php?page=conductores&delete_success=licencia");
+            exit();
+        } else {
+            echo "<div class='alert alert-danger m-2'>Error desconocido al eliminar la licencia.</div>";
+        }
+    } catch (Exception $e) {
+        echo '<div class="alert alert-danger alert-dismissible fade show m-2" role="alert">
+                <strong>No se puede eliminar:</strong> ' . $e->getMessage() . '
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+                </div>';
     }
 }
 
@@ -166,9 +180,20 @@ if (isset($_GET['save_success']) || isset($_GET['update_success']) || isset($_GE
     echo '<div id="alertaExito" class="alert alert-success alert-dismissible fade show m-2" role="alert">
             ' . $mensaje . '
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
-          </div>';
+            </div>';
 }
 
 require_once __DIR__ .'/../Views/modConductor.php';
 
 ?>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    let alertas = document.querySelectorAll('.alert');
+    alertas.forEach(function (alerta) {
+        setTimeout(function () {
+            let bsAlert = new bootstrap.Alert(alerta);
+            bsAlert.close();
+        }, 3000);
+    });
+});
+</script>

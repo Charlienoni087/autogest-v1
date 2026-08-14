@@ -42,7 +42,7 @@ $fechaActual = date('Y-m-d');
                                 <th class="text-center">Acciones</th>
                             </tr>
                         </thead>
-                       <tbody>
+                        <tbody>
                             <?php if (isset($listaConductores) && count($listaConductores) > 0): ?>
                                 <?php foreach ($listaConductores as $conductor): ?>
                                     <tr>
@@ -351,7 +351,5 @@ document.addEventListener('DOMContentLoaded', function () {
     modal.show();
 });
 </script>
-<script>
 
-</script>
 <?php endif; ?>

@@ -56,8 +56,28 @@ class Licencia {
     }
 
     public function eliminar(int $id_licencia) {
+        // 1. Verificar si la licencia está asignada a un conductor
+        $sqlCheck = "SELECT COUNT(*) as total FROM Conductores WHERE id_licencia = ?";
+        $stmtCheck = $this->db->prepare($sqlCheck);
+        if (!$stmtCheck) {
+            die("Error prepare: " . $this->db->error);
+        }
+        
+        $stmtCheck->bind_param("i", $id_licencia);
+        $stmtCheck->execute();
+        $resultadoCheck = $stmtCheck->get_result()->fetch_assoc();
+
+        if ($resultadoCheck['total'] > 0) {
+            // Lanzamos la excepción que será capturada por el controlador
+            throw new Exception("Esta licencia está actualmente asignada a un conductor y no puede ser eliminada.");
+        }
+
+        // 2. Si no tiene conductores, procedemos a eliminar
         $sql = "DELETE FROM Licencia WHERE id_licencia = ?";
         $stmt = $this->db->prepare($sql);
+        if (!$stmt) {
+            die("Error al eliminar: " . $this->db->error);
+        }
         $stmt->bind_param("i", $id_licencia);
         return $stmt->execute();
     }

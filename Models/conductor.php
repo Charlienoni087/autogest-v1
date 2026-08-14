@@ -58,15 +58,37 @@ class Conductor {
     }
 
     public function eliminar(int $id_conductor) {
+        // 1. Verificar si el conductor tiene vehículos asignados
+        $sqlVehiculos = "SELECT COUNT(*) as total FROM Vehiculos WHERE id_conductor = ?";
+        $stmtV = $this->db->prepare($sqlVehiculos);
+        $stmtV->bind_param("i", $id_conductor);
+        $stmtV->execute();
+        $resultadoV = $stmtV->get_result()->fetch_assoc();
+        
+        if ($resultadoV['total'] > 0) {
+            throw new Exception("Este conductor tiene vehículos asignados y no puede ser eliminado.");
+        }
+
+        // 2. Verificar si el conductor tiene reportes registrados
+        $sqlReportes = "SELECT COUNT(*) as total FROM Reportes WHERE id_conductor = ?";
+        $stmtR = $this->db->prepare($sqlReportes);
+        $stmtR->bind_param("i", $id_conductor);
+        $stmtR->execute();
+        $resultadoR = $stmtR->get_result()->fetch_assoc();
+        
+        if ($resultadoR['total'] > 0) {
+            throw new Exception("Este conductor tiene reportes de entrada/salida y no puede ser eliminado.");
+        }
+
+        // 3. Proceder con la eliminación si no hay dependencias
         $sql = "DELETE FROM Conductores WHERE id_conductor = ?";
         $stmt = $this->db->prepare($sql);
         if (!$stmt) {
-            die("Error al eliminar" . $this->db->error);
+            die("Error al eliminar: " . $this->db->error);
         }
         $stmt->bind_param("i", $id_conductor);
         return $stmt->execute();
     }
-
     public function obtenerConductoresConLicencia() {
         $sql = "SELECT 
                     c.id_conductor,

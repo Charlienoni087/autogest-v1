@@ -19,7 +19,7 @@ class Vehiculo {
 
     public function obtenerVehiculos() {
     $sql = "SELECT v.*, c.placa, cond.nombre_conductor,
-                   (SELECT m.estado FROM Mantenimiento m 
+                    (SELECT m.estado FROM Mantenimiento m 
                     WHERE m.id_vehiculo = v.id_vehiculo 
                     ORDER BY m.fecha_mantenimiento DESC LIMIT 1) AS estado_mantenimiento
             FROM vehiculos v
@@ -88,11 +88,33 @@ public function actualizarVehiculo(int $id_vehiculo, string $marca, string $mode
     return $stmt->execute();
 }
 
-    public function eliminarVehiculo(int $id_vehiculo) {
-    $sql = "DELETE FROM Vehiculos WHERE id_vehiculo = ?";
-    $stmt = $this->db->prepare($sql);
-    $stmt->bind_param("i", $id_vehiculo);
-    return $stmt->execute();
+public function eliminarVehiculo(int $id_vehiculo) {
+        // 1. Verificar si el vehículo tiene reportes vinculados
+        $sqlReportes = "SELECT COUNT(*) as total FROM Reportes WHERE id_vehiculo = ?";
+        $stmtR = $this->db->prepare($sqlReportes);
+        if (!$stmtR) {
+            die("Error prepare: " . $this->db->error);
+        }
+        $stmtR->bind_param("i", $id_vehiculo);
+        $stmtR->execute();
+        $resultadoR = $stmtR->get_result()->fetch_assoc();
+        $stmtR->close();
+
+        if ($resultadoR['total'] > 0) {
+            throw new Exception("Este vehículo tiene reportes de entrada/salida asociados y no puede ser eliminado.");
+        }
+
+        // 2. Si no tiene reportes, procedemos a eliminar
+        $sql = "DELETE FROM Vehiculos WHERE id_vehiculo = ?";
+        $stmt = $this->db->prepare($sql);
+        if (!$stmt) {
+            die("Error al preparar eliminación: " . $this->db->error);
+        }
+        $stmt->bind_param("i", $id_vehiculo);
+        $exito = $stmt->execute();
+        $stmt->close();
+        
+        return $exito;
     }
 
 /*
