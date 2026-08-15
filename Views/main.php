@@ -20,9 +20,9 @@ unset($_SESSION['login_exitoso']);
 // Si no viene ninguna página en la URL, por defecto cargará 'dashboard'
 
 $permisos = [
-    'Administrador' => ['dashboard', 'vehiculos', 'conductores', 'usuarios', 'reportes', 'mantenimiento', 'logout'],
-    'SuperAdmin' => ['dashboard', 'vehiculos', 'conductores', 'usuarios', 'reportes', 'mantenimiento', 'logout'],
-    'Supervisor' => ['dashboard', 'vehiculos', 'conductores', 'reportes', 'licencia', 'logout'],
+    'Administrador' => ['dashboard', 'vehiculos', 'conductores', 'usuarios', 'reportes', 'mantenimiento', 'logout', 'manual'],
+    'SuperAdmin' => ['dashboard', 'vehiculos', 'conductores', 'usuarios', 'reportes', 'mantenimiento', 'logout', 'manual'],
+    'Supervisor' => ['dashboard', 'vehiculos', 'conductores', 'reportes', 'licencia', 'logout', 'manual'],
 ];
 
 $rol = $_SESSION['rol'];
@@ -139,9 +139,13 @@ $modulosPermitidos = $permisos[$rol] ?? [];
                         </a>
             <?php endif; ?>
 
-            <br>
-            <br>
-            
+            <?php if (in_array('manual', $modulosPermitidos)): ?>
+                <a href="main.php?page=manual" class="btn-nav <?= $page == 'manual' ? 'active' : '' ?>">
+                    <i class="bi bi-question-circle-fill me-3 fs-5"></i> <span>Como usar?</span>
+                </a>
+            <?php endif; ?>
+
+            <br>            
             <form id="formLogout" action="../Controllers/LogoutController.php" method="POST" style="display: none;">
             </form>
 
@@ -231,6 +235,10 @@ $modulosPermitidos = $permisos[$rol] ?? [];
                     case 'mantenimiento':
                         echo "<h2>Mantenimiento</h2>";
                         require_once __DIR__ . '/../Controllers/MantenimientoController.php';
+                        break;
+
+                    case 'manual':
+                        include 'modManual.php';
                         break;
 
                     default:
